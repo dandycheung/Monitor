@@ -28,9 +28,9 @@ class MonitorInterceptor(context: Context) : Interceptor {
 
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request()
-        var monitorHttp = buildMonitorHttp(request = request)
-        monitorHttp = insert(monitor = monitorHttp)
-        MonitorNotificationHandler.show(monitor = monitorHttp)
+        var monitor = buildMonitor(request = request)
+        monitor = insert(monitor = monitor)
+        MonitorNotificationHandler.show(monitor = monitor)
         var response: Response?
         var error: Throwable?
         try {
@@ -41,16 +41,16 @@ class MonitorInterceptor(context: Context) : Interceptor {
             error = throwable
         }
         try {
-            monitorHttp = if (response != null) {
+            monitor = if (response != null) {
                 processResponse(
                     response = response,
-                    monitor = monitorHttp
+                    monitor = monitor
                 )
             } else {
-                monitorHttp.copy(error = error.toString())
+                monitor.copy(error = error.toString())
             }
-            update(monitor = monitorHttp)
-            MonitorNotificationHandler.show(monitor = monitorHttp)
+            update(monitor = monitor)
+            MonitorNotificationHandler.show(monitor = monitor)
         } catch (_: Throwable) {
 
         }
@@ -60,7 +60,7 @@ class MonitorInterceptor(context: Context) : Interceptor {
         return response!!
     }
 
-    private fun buildMonitorHttp(request: Request): Monitor {
+    private fun buildMonitor(request: Request): Monitor {
         val requestDate = System.currentTimeMillis()
         val requestBody = request.body
         val url = request.url
@@ -72,20 +72,25 @@ class MonitorInterceptor(context: Context) : Interceptor {
         val requestHeaders = request.headers.map {
             MonitorPair(name = it.first, value = it.second)
         }
-        val mRequestBody =
-            if (requestBody != null && ResponseUtils.bodyHasSupportedEncoding(request.headers)) {
-                val buffer = Buffer()
-                requestBody.writeTo(buffer)
-                if (ResponseUtils.isProbablyUtf8(buffer)) {
-                    val charset =
-                        requestBody.contentType()?.charset(Charsets.UTF_8) ?: Charsets.UTF_8
-                    buffer.readString(charset)
-                } else {
-                    ""
-                }
+        val mRequestBody = if (requestBody == null) {
+            ""
+        } else if (ResponseUtils.bodyHasUnknownEncoding(headers = request.headers)) {
+            "(encoded body omitted)"
+        } else if (requestBody.isDuplex()) {
+            "(duplex request body omitted)"
+        } else if (requestBody.isOneShot()) {
+            "(one-shot body omitted)"
+        } else {
+            val buffer = Buffer()
+            requestBody.writeTo(buffer)
+            val contentType = requestBody.contentType()
+            val charset = contentType?.charset(Charsets.UTF_8) ?: Charsets.UTF_8
+            if (ResponseUtils.isProbablyUtf8(buffer)) {
+                buffer.readString(charset)
             } else {
-                ""
+                "(binary body omitted)"
             }
+        }
         val requestContentLength = requestBody?.contentLength() ?: 0
         val requestContentType = requestBody?.contentType()?.toString() ?: ""
         return Monitor(
@@ -125,28 +130,25 @@ class MonitorInterceptor(context: Context) : Interceptor {
             MonitorPair(name = it.first, value = it.second)
         }
         val responseBody = response.body
-        val responseContentType: String
-        var responseContentLength = 0L
-        var mResponseBody = "(encoded body omitted)"
-        if (responseBody != null) {
-            responseContentType = responseBody.contentType()?.toString() ?: ""
-            responseContentLength = responseBody.contentLength()
-            if (response.promisesBody()) {
-                val encodingIsSupported = ResponseUtils.bodyHasSupportedEncoding(response.headers)
-                if (encodingIsSupported) {
-                    val buffer = ResponseUtils.getNativeSource(response)
-                    responseContentLength = buffer.size
-                    if (ResponseUtils.isProbablyUtf8(buffer)) {
-                        if (responseBody.contentLength() != 0L) {
-                            val charset = responseBody.contentType()?.charset(Charsets.UTF_8)
-                                ?: Charsets.UTF_8
-                            mResponseBody = buffer.clone().readString(charset)
-                        }
-                    }
-                }
-            }
+        val responseContentType = responseBody?.contentType()?.toString() ?: ""
+        val responseContentLength = responseBody?.contentLength() ?: 0
+        val mResponseBody = if (responseBody == null || !response.promisesBody()) {
+            ""
+        } else if (ResponseUtils.bodyHasUnknownEncoding(headers = response.headers)) {
+            "(encoded body omitted)"
         } else {
-            responseContentType = ""
+            val buffer = ResponseUtils.getNativeSource(response = response)
+            if (ResponseUtils.isProbablyUtf8(buffer)) {
+                if (responseContentLength != 0L) {
+                    val charset = responseBody.contentType()?.charset(Charsets.UTF_8)
+                        ?: Charsets.UTF_8
+                    buffer.clone().readString(charset)
+                } else {
+                    "(encoded body omitted)"
+                }
+            } else {
+                "(binary body omitted)"
+            }
         }
         return monitor.copy(
             requestDate = response.sentRequestAtMillis,
@@ -165,12 +167,12 @@ class MonitorInterceptor(context: Context) : Interceptor {
     }
 
     private fun insert(monitor: Monitor): Monitor {
-        val id = MonitorDatabase.instance.monitorDao.insert(model = monitor)
+        val id = MonitorDatabase.instance.monitorDao.insert(monitor = monitor)
         return monitor.copy(id = id)
     }
 
     private fun update(monitor: Monitor) {
-        MonitorDatabase.instance.monitorDao.update(model = monitor)
+        MonitorDatabase.instance.monitorDao.update(monitor = monitor)
     }
 
 }

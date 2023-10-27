@@ -46,12 +46,14 @@ dependencies {
     implementation(libs.google.gson)
     compileOnly(libs.okhttp)
     implementation(libs.room.ktx)
+//    implementation(libs.room.paging)
     ksp(libs.room.compiler)
     implementation(platform(libs.compose.bom))
     implementation(libs.compose.ui)
     implementation(libs.compose.foundation)
     implementation(libs.compose.material.icons)
     implementation(libs.compose.material3)
+//    implementation(libs.compose.paging)
 }
 
 afterEvaluate {

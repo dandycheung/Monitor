@@ -16,10 +16,10 @@ import kotlinx.coroutines.flow.Flow
 internal interface MonitorDao {
 
     @Insert
-    fun insert(model: Monitor): Long
+    fun insert(monitor: Monitor): Long
 
     @Update
-    fun update(model: Monitor)
+    fun update(monitor: Monitor)
 
     @Query("select * from ${MonitorDatabase.MonitorTableName} where id =:id")
     suspend fun query(id: Long): Monitor

@@ -36,11 +36,10 @@ internal object ResponseUtils {
         }
     }
 
-    fun bodyHasSupportedEncoding(headers: Headers): Boolean {
-        val contentEncoding = headers[CONTENT_ENCODING]
-        return contentEncoding.isNullOrBlank() ||
-                contentEncoding.equals("identity", ignoreCase = true) ||
-                contentEncoding.equals("gzip", ignoreCase = true)
+    fun bodyHasUnknownEncoding(headers: Headers): Boolean {
+        val contentEncoding = headers[CONTENT_ENCODING] ?: return false
+        return !contentEncoding.equals("identity", ignoreCase = true) &&
+                !contentEncoding.equals("gzip", ignoreCase = true)
     }
 
     fun getNativeSource(response: Response): Buffer {
