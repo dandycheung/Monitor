@@ -13,7 +13,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Share
@@ -26,13 +25,10 @@ import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
@@ -63,15 +59,12 @@ internal fun MonitorDetailsPage(
     onClickBack: () -> Unit,
     onClickShare: () -> Unit
 ) {
-    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
     Scaffold(
         modifier = Modifier
-            .fillMaxSize()
-            .nestedScroll(connection = scrollBehavior.nestedScrollConnection),
-        containerColor = Color.White,
+            .fillMaxSize(),
+        containerColor = colorResource(id = R.color.monitor_page_background),
         topBar = {
             MonitorDetailsTopBar(
-                scrollBehavior = scrollBehavior,
                 title = mainPageViewState.title,
                 onClickBack = onClickBack,
                 onClickShare = onClickShare
@@ -101,36 +94,31 @@ internal fun MonitorDetailsPage(
                     }
                 }
             )
-            SelectionContainer(
+            HorizontalPager(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .weight(weight = 1f)
+                    .weight(weight = 1f),
+                state = pagerState
             ) {
-                HorizontalPager(
-                    modifier = Modifier
-                        .fillMaxSize(),
-                    state = pagerState
-                ) {
-                    when (it) {
-                        0 -> {
-                            MonitorDetailsOverviewPage(
-                                pageViewState = overviewPageViewState
-                            )
-                        }
+                when (it) {
+                    0 -> {
+                        MonitorDetailsOverviewPage(
+                            pageViewState = overviewPageViewState
+                        )
+                    }
 
-                        1 -> {
-                            MonitorDetailsPage(
-                                headers = requestPageViewState.headers,
-                                bodyFormat = requestPageViewState.bodyFormat
-                            )
-                        }
+                    1 -> {
+                        MonitorDetailsPage(
+                            headers = requestPageViewState.headers,
+                            bodyFormat = requestPageViewState.bodyFormat
+                        )
+                    }
 
-                        2 -> {
-                            MonitorDetailsPage(
-                                headers = responsePageViewState.headers,
-                                bodyFormat = responsePageViewState.bodyFormat
-                            )
-                        }
+                    2 -> {
+                        MonitorDetailsPage(
+                            headers = responsePageViewState.headers,
+                            bodyFormat = responsePageViewState.bodyFormat
+                        )
                     }
                 }
             }
@@ -140,19 +128,17 @@ internal fun MonitorDetailsPage(
 
 @Composable
 private fun MonitorDetailsTopBar(
-    scrollBehavior: TopAppBarScrollBehavior,
     title: String,
     onClickBack: () -> Unit,
     onClickShare: () -> Unit
 ) {
     CenterAlignedTopAppBar(
         modifier = Modifier,
-        scrollBehavior = scrollBehavior,
         colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-            containerColor = colorResource(id = R.color.monitor_top_bar),
-            navigationIconContentColor = Color.White,
-            titleContentColor = Color.White,
-            actionIconContentColor = Color.White
+            containerColor = colorResource(id = R.color.monitor_top_bar_background),
+            navigationIconContentColor = colorResource(id = R.color.monitor_top_bar_content),
+            titleContentColor = colorResource(id = R.color.monitor_top_bar_content),
+            actionIconContentColor = colorResource(id = R.color.monitor_top_bar_content)
         ),
         title = {
             Text(
@@ -200,12 +186,12 @@ private fun ScrollableTabRow(
     TabRow(
         modifier = Modifier.fillMaxWidth(),
         selectedTabIndex = selectedTabIndex,
-        containerColor = colorResource(id = R.color.monitor_top_bar),
+        containerColor = colorResource(id = R.color.monitor_top_bar_background),
         indicator = @Composable { tabPositions ->
             if (selectedTabIndex < tabPositions.size) {
                 TabRowDefaults.Indicator(
                     modifier = Modifier.tabIndicatorOffset(tabPositions[selectedTabIndex]),
-                    color = Color.White
+                    color = colorResource(id = R.color.monitor_top_bar_indicator)
                 )
             }
         },
@@ -225,9 +211,9 @@ private fun ScrollableTabRow(
                 fontSize = 16.sp,
                 textAlign = TextAlign.Center,
                 color = if (index == selectedTabIndex) {
-                    Color.White
+                    colorResource(id = R.color.monitor_top_bar_tab_text_selected)
                 } else {
-                    Color(0xCCFFFFFF)
+                    colorResource(id = R.color.monitor_top_bar_tab_text_unselected)
                 }
             )
         }

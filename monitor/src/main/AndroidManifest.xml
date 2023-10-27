@@ -3,7 +3,7 @@
     <application>
         <activity
             android:name=".ui.MonitorActivity"
-            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation|locale|layoutDirection|uiMode"
+            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation|locale|layoutDirection"
             android:exported="false"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
@@ -11,7 +11,7 @@
             android:theme="@style/Theme.Monitor" />
         <activity
             android:name=".ui.MonitorDetailsActivity"
-            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation|locale|layoutDirection|uiMode"
+            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation|locale|layoutDirection"
             android:exported="false"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"

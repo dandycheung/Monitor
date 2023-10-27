@@ -29,7 +29,6 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -56,7 +55,7 @@ internal fun MonitorPage(
     Scaffold(
         modifier = Modifier
             .fillMaxSize(),
-        containerColor = Color.White,
+        containerColor = colorResource(id = R.color.monitor_page_background),
         topBar = {
             MonitorTopBar(
                 onClickBack = onClickBack,
@@ -108,7 +107,7 @@ private fun MonitorItem(monitor: Monitor, onClick: (Monitor) -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .background(color = colorResource(id = R.color.monitor_background))
+            .background(color = colorResource(id = R.color.monitor_item_background))
             .clickable(
                 onClickLabel = null,
                 indication = null,
@@ -188,7 +187,7 @@ private fun MonitorItem(monitor: Monitor, onClick: (Monitor) -> Unit) {
                 .fillMaxWidth()
                 .padding(top = 10.dp)
                 .height(height = 4.dp)
-                .background(color = colorResource(id = R.color.monitor_separator))
+                .background(color = colorResource(id = R.color.monitor_item_separator))
         )
     }
 }
@@ -201,10 +200,10 @@ private fun MonitorTopBar(
     TopAppBar(
         modifier = Modifier,
         colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-            containerColor = colorResource(id = R.color.monitor_top_bar),
-            navigationIconContentColor = Color.White,
-            titleContentColor = Color.White,
-            actionIconContentColor = Color.White
+            containerColor = colorResource(id = R.color.monitor_top_bar_background),
+            navigationIconContentColor = colorResource(id = R.color.monitor_top_bar_content),
+            titleContentColor = colorResource(id = R.color.monitor_top_bar_content),
+            actionIconContentColor = colorResource(id = R.color.monitor_top_bar_content)
         ),
         title = {
             Text(
