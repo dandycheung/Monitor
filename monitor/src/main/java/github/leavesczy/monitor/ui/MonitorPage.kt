@@ -26,12 +26,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -41,7 +39,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import github.leavesczy.monitor.R
 import github.leavesczy.monitor.db.Monitor
-import github.leavesczy.monitor.db.MonitorStatus
+import github.leavesczy.monitor.db.MonitorState
 
 /**
  * @Author: leavesCZY
@@ -52,18 +50,15 @@ import github.leavesczy.monitor.db.MonitorStatus
 internal fun MonitorPage(
     onClickBack: () -> Unit,
     onClickClear: () -> Unit,
-    dataList: List<Monitor>,
+    monitorList: List<Monitor>,
     onClickMonitorItem: (Monitor) -> Unit
 ) {
-    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
     Scaffold(
         modifier = Modifier
-            .fillMaxSize()
-            .nestedScroll(connection = scrollBehavior.nestedScrollConnection),
+            .fillMaxSize(),
         containerColor = Color.White,
         topBar = {
             MonitorTopBar(
-                scrollBehavior = scrollBehavior,
                 onClickBack = onClickBack,
                 onClickClear = onClickClear
             )
@@ -77,12 +72,12 @@ internal fun MonitorPage(
             contentPadding = PaddingValues(bottom = 60.dp)
         ) {
             items(
-                items = dataList,
+                items = monitorList,
                 key = {
                     it.id
                 },
                 contentType = {
-                    "MonitorHttp"
+                    "monitor"
                 }
             ) {
                 MonitorItem(monitor = it, onClick = onClickMonitorItem)
@@ -93,21 +88,21 @@ internal fun MonitorPage(
 
 @Composable
 private fun MonitorItem(monitor: Monitor, onClick: (Monitor) -> Unit) {
-    val color = when (monitor.httpStatus) {
-        MonitorStatus.Requesting -> {
-            R.color.monitor_http_status_requesting
+    val color = when (monitor.httpState) {
+        MonitorState.Requesting -> {
+            R.color.monitor_http_state_requesting
         }
 
-        MonitorStatus.Complete -> {
+        MonitorState.Complete -> {
             if (monitor.responseCode == 200) {
-                R.color.monitor_http_status_successful
+                R.color.monitor_http_state_successful
             } else {
-                R.color.monitor_http_status_unsuccessful
+                R.color.monitor_http_state_unsuccessful
             }
         }
 
-        MonitorStatus.Failed -> {
-            R.color.monitor_http_status_unsuccessful
+        MonitorState.Failed -> {
+            R.color.monitor_http_state_unsuccessful
         }
     }
     Column(
@@ -200,13 +195,11 @@ private fun MonitorItem(monitor: Monitor, onClick: (Monitor) -> Unit) {
 
 @Composable
 private fun MonitorTopBar(
-    scrollBehavior: TopAppBarScrollBehavior,
     onClickBack: () -> Unit,
     onClickClear: () -> Unit
 ) {
     TopAppBar(
         modifier = Modifier,
-        scrollBehavior = scrollBehavior,
         colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
             containerColor = colorResource(id = R.color.monitor_top_bar),
             navigationIconContentColor = Color.White,

@@ -1,7 +1,7 @@
 package github.leavesczy.monitor.db
 
 import androidx.room.TypeConverter
-import github.leavesczy.monitor.provider.JsonProvider
+import github.leavesczy.monitor.provider.JsonHnadler
 
 /**
  * @Author: leavesCZY
@@ -12,13 +12,13 @@ import github.leavesczy.monitor.provider.JsonProvider
 internal class MonitorTypeConverter {
 
     @TypeConverter
-    fun fromJsonArray(json: String): List<MonitorHeader> {
-        return JsonProvider.fromJsonArray(json, MonitorHeader::class.java)
+    fun fromJsonArray(json: String): List<MonitorPair> {
+        return JsonHnadler.fromJsonArray(json, MonitorPair::class.java)
     }
 
     @TypeConverter
-    fun toJson(list: List<MonitorHeader>): String {
-        return JsonProvider.toJson(list)
+    fun toJson(list: List<MonitorPair>): String {
+        return JsonHnadler.toJson(list)
     }
 
 }

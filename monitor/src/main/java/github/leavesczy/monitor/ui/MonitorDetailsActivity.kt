@@ -1,6 +1,7 @@
 package github.leavesczy.monitor.ui
 
 import android.app.Activity
+import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -63,11 +64,15 @@ internal class MonitorDetailsActivity : AppCompatActivity() {
 
     private fun onClickShare() {
         lifecycleScope.launch {
-            val monitorHttp = MonitorDatabase.instance.monitorDao.query(id = id)
-            share(
-                context = applicationContext,
-                content = FormatUtils.getShareText(monitor = monitorHttp)
-            )
+            try {
+                val monitorHttp = MonitorDatabase.instance.monitorDao.query(id = id)
+                share(
+                    context = applicationContext,
+                    content = FormatUtils.buildShareText(monitor = monitorHttp)
+                )
+            } catch (_: ActivityNotFoundException) {
+
+            }
         }
     }
 

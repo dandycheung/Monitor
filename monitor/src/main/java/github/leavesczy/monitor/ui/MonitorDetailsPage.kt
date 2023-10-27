@@ -2,10 +2,15 @@ package github.leavesczy.monitor.ui
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.text.selection.SelectionContainer
@@ -13,7 +18,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.CenterAlignedTopAppBar
-import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
@@ -25,15 +29,20 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import github.leavesczy.monitor.R
+import github.leavesczy.monitor.db.MonitorPair
 import github.leavesczy.monitor.logic.MonitorDetailOverviewPageViewState
 import github.leavesczy.monitor.logic.MonitorDetailPageViewState
 import github.leavesczy.monitor.logic.MonitorDetailRequestPageViewState
@@ -104,15 +113,23 @@ internal fun MonitorDetailsPage(
                 ) {
                     when (it) {
                         0 -> {
-                            MonitorDetailsOverviewPage(pageViewState = overviewPageViewState)
+                            MonitorDetailsOverviewPage(
+                                pageViewState = overviewPageViewState
+                            )
                         }
 
                         1 -> {
-                            MonitorDetailsRequestPage(pageViewState = requestPageViewState)
+                            MonitorDetailsPage(
+                                headers = requestPageViewState.headers,
+                                bodyFormat = requestPageViewState.bodyFormat
+                            )
                         }
 
                         2 -> {
-                            MonitorDetailsResponsePage(pageViewState = responsePageViewState)
+                            MonitorDetailsPage(
+                                headers = responsePageViewState.headers,
+                                bodyFormat = responsePageViewState.bodyFormat
+                            )
                         }
                     }
                 }
@@ -193,7 +210,7 @@ private fun ScrollableTabRow(
             }
         },
         divider = @Composable {
-            Divider()
+
         }
     ) {
         tagList.forEachIndexed { index, item ->
@@ -210,9 +227,110 @@ private fun ScrollableTabRow(
                 color = if (index == selectedTabIndex) {
                     Color.White
                 } else {
-                    Color(0xB3FFFFFF)
+                    Color(0xCCFFFFFF)
                 }
             )
         }
+    }
+}
+
+@Composable
+private fun MonitorDetailsOverviewPage(pageViewState: MonitorDetailOverviewPageViewState) {
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxSize(),
+        state = rememberLazyListState(),
+        contentPadding = PaddingValues(
+            start = 20.dp,
+            top = 15.dp,
+            end = 20.dp,
+            bottom = 60.dp
+        )
+    ) {
+        items(
+            items = pageViewState.overview,
+            contentType = {
+                "overviewItem"
+            }
+        ) {
+            MonitorPairItem(pair = it)
+        }
+    }
+}
+
+@Composable
+private fun MonitorDetailsPage(
+    headers: List<MonitorPair>,
+    bodyFormat: String
+) {
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxSize(),
+        state = rememberLazyListState(),
+        contentPadding = PaddingValues(
+            start = 20.dp,
+            top = 15.dp,
+            end = 20.dp,
+            bottom = 60.dp
+        )
+    ) {
+        items(
+            items = headers,
+            contentType = {
+                "headers"
+            }
+        ) {
+            MonitorPairItem(pair = it)
+        }
+        if (bodyFormat.isNotBlank()) {
+            item(contentType = "bodyFormat") {
+                Text(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 30.dp),
+                    text = bodyFormat,
+                    style = TextStyle(
+                        fontFamily = FontFamily.Default,
+                        fontWeight = FontWeight.Normal,
+                        fontSize = 18.sp,
+                        color = colorResource(id = R.color.monitor_http_state_successful)
+                    )
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun MonitorPairItem(pair: MonitorPair) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 5.dp),
+        verticalAlignment = Alignment.Top
+    ) {
+        Text(
+            modifier = Modifier
+                .weight(weight = 3.2f)
+                .padding(end = 10.dp),
+            text = pair.name,
+            style = TextStyle(
+                fontFamily = FontFamily.SansSerif,
+                fontWeight = FontWeight.Medium,
+                fontSize = 16.sp,
+                color = colorResource(id = R.color.monitor_http_state_successful)
+            )
+        )
+        Text(
+            modifier = Modifier
+                .weight(weight = 5f),
+            text = pair.value,
+            style = TextStyle(
+                fontFamily = FontFamily.Default,
+                fontWeight = FontWeight.Normal,
+                fontSize = 15.sp,
+                color = colorResource(id = R.color.monitor_http_state_successful)
+            )
+        )
     }
 }

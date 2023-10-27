@@ -4,7 +4,7 @@ import android.app.Application
 import android.content.Context
 import github.leavesczy.monitor.db.Monitor
 import github.leavesczy.monitor.db.MonitorDatabase
-import github.leavesczy.monitor.db.MonitorHeader
+import github.leavesczy.monitor.db.MonitorPair
 import github.leavesczy.monitor.provider.ContextProvider
 import github.leavesczy.monitor.provider.MonitorNotificationHandler
 import github.leavesczy.monitor.utils.ResponseUtils
@@ -70,7 +70,7 @@ class MonitorInterceptor(context: Context) : Interceptor {
         val query = url.encodedQuery ?: ""
         val method = request.method
         val requestHeaders = request.headers.map {
-            MonitorHeader(name = it.first, value = it.second)
+            MonitorPair(name = it.first, value = it.second)
         }
         val mRequestBody =
             if (requestBody != null && ResponseUtils.bodyHasSupportedEncoding(request.headers)) {
@@ -119,10 +119,10 @@ class MonitorInterceptor(context: Context) : Interceptor {
         monitor: Monitor
     ): Monitor {
         val requestHeaders = response.request.headers.map {
-            MonitorHeader(name = it.first, value = it.second)
+            MonitorPair(name = it.first, value = it.second)
         }
         val responseHeaders = response.headers.map {
-            MonitorHeader(name = it.first, value = it.second)
+            MonitorPair(name = it.first, value = it.second)
         }
         val responseBody = response.body
         val responseContentType: String

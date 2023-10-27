@@ -23,13 +23,12 @@ internal class MonitorActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            val httpRecordFlow =
-                MonitorDatabase.instance.monitorDao.queryFlow(limit = 300)
-            val dataList by httpRecordFlow.collectAsState(initial = emptyList())
+            val queryFlow = MonitorDatabase.instance.monitorDao.queryFlow(limit = 300)
+            val monitorList by queryFlow.collectAsState(initial = emptyList())
             MonitorPage(
                 onClickBack = ::onClickBack,
                 onClickClear = ::onClickClear,
-                dataList = dataList,
+                monitorList = monitorList,
                 onClickMonitorItem = ::onClickMonitorItem
             )
         }

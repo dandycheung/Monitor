@@ -9,7 +9,6 @@ import github.leavesczy.monitor.db.MonitorDatabase
 import github.leavesczy.monitor.utils.FormatUtils
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 /**
@@ -53,61 +52,31 @@ internal class MonitorDetailViewModel(id: Long) : ViewModel() {
 
     init {
         viewModelScope.launch {
-            val monitorDao = MonitorDatabase.instance.monitorDao
-            launch {
-                val monitor = monitorDao.query(id = id)
-                mainPageViewState = MonitorDetailPageViewState(
-                    title = String.format("%s  %s", monitor.method, monitor.pathWithQuery),
-                    tabTagList = listOf(
-                        "Overview",
-                        "Request",
-                        "Response"
+            MonitorDatabase.instance.monitorDao.queryFlow(id = id)
+                .distinctUntilChanged()
+                .collectLatest {
+                    mainPageViewState = MonitorDetailPageViewState(
+                        title = String.format("%s  %s", it.method, it.pathWithQuery),
+                        tabTagList = listOf(
+                            "Overview",
+                            "Request",
+                            "Response"
+                        )
                     )
-                )
-            }
-            launch {
-                monitorDao.queryFlow(id = id)
-                    .distinctUntilChanged()
-                    .map {
-                        MonitorDetailOverviewPageViewState(
-                            overview = FormatUtils.buildMonitorOverview(
-                                monitor = it
-                            )
+                    overviewPageViewState = MonitorDetailOverviewPageViewState(
+                        overview = FormatUtils.buildOverview(
+                            monitor = it
                         )
-                    }
-                    .distinctUntilChanged()
-                    .collectLatest {
-                        overviewPageViewState = it
-                    }
-            }
-            launch {
-                monitorDao.queryFlow(id = id)
-                    .distinctUntilChanged()
-                    .map {
-                        MonitorDetailRequestPageViewState(
-                            headers = it.requestHeaders,
-                            bodyFormat = it.requestBodyFormat
-                        )
-                    }
-                    .distinctUntilChanged()
-                    .collectLatest {
-                        requestPageViewState = it
-                    }
-            }
-            launch {
-                monitorDao.queryFlow(id = id)
-                    .distinctUntilChanged()
-                    .map {
-                        MonitorDetailResponsePageViewState(
-                            headers = it.responseHeaders,
-                            bodyFormat = it.responseBodyFormat
-                        )
-                    }
-                    .distinctUntilChanged()
-                    .collectLatest {
-                        responsePageViewState = it
-                    }
-            }
+                    )
+                    requestPageViewState = MonitorDetailRequestPageViewState(
+                        headers = it.requestHeaders,
+                        bodyFormat = it.requestBodyFormat
+                    )
+                    responsePageViewState = MonitorDetailResponsePageViewState(
+                        headers = it.responseHeaders,
+                        bodyFormat = it.responseBodyFormat
+                    )
+                }
         }
     }
 

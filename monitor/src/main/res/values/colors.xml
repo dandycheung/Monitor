@@ -3,7 +3,7 @@
     <color name="monitor_background">#FFFFFFFF</color>
     <color name="monitor_separator">#FFF0F0F0</color>
     <color name="monitor_top_bar">#FF0277BD</color>
-    <color name="monitor_http_status_requesting">#FF81877F</color>
-    <color name="monitor_http_status_successful">#FF000000</color>
-    <color name="monitor_http_status_unsuccessful">#FFF33631</color>
+    <color name="monitor_http_state_requesting">#FF81877F</color>
+    <color name="monitor_http_state_successful">#FF000000</color>
+    <color name="monitor_http_state_unsuccessful">#FFBD302C</color>
 </resources>

@@ -33,7 +33,7 @@ internal data class Monitor(
     @ColumnInfo(name = "method")
     val method: String,
     @ColumnInfo(name = "requestHeaders")
-    val requestHeaders: List<MonitorHeader>,
+    val requestHeaders: List<MonitorPair>,
     @ColumnInfo(name = "requestBody")
     val requestBody: String,
     @ColumnInfo(name = "requestContentType")
@@ -43,7 +43,7 @@ internal data class Monitor(
     @ColumnInfo(name = "requestDate")
     val requestDate: Long,
     @ColumnInfo(name = "responseHeaders")
-    val responseHeaders: List<MonitorHeader>,
+    val responseHeaders: List<MonitorPair>,
     @ColumnInfo(name = "responseBody")
     val responseBody: String,
     @ColumnInfo(name = "responseContentType")
@@ -70,49 +70,49 @@ internal data class Monitor(
 
     }
 
-    val httpStatus by lazy(mode = LazyThreadSafetyMode.NONE) {
+    val httpState by lazy(mode = LazyThreadSafetyMode.NONE) {
         when {
             error != null -> {
-                MonitorStatus.Failed
+                MonitorState.Failed
             }
 
             responseCode == DEFAULT_RESPONSE_CODE -> {
-                MonitorStatus.Requesting
+                MonitorState.Requesting
             }
 
             else -> {
-                MonitorStatus.Complete
+                MonitorState.Complete
             }
         }
     }
 
     val notificationText by lazy(mode = LazyThreadSafetyMode.NONE) {
-        when (httpStatus) {
-            MonitorStatus.Requesting -> {
+        when (httpState) {
+            MonitorState.Requesting -> {
                 "...$pathWithQuery"
             }
 
-            MonitorStatus.Complete -> {
+            MonitorState.Complete -> {
                 "$responseCode $pathWithQuery"
             }
 
-            MonitorStatus.Failed -> {
+            MonitorState.Failed -> {
                 "!!!$pathWithQuery"
             }
         }
     }
 
     val responseSummaryText by lazy(mode = LazyThreadSafetyMode.NONE) {
-        when (httpStatus) {
-            MonitorStatus.Requesting -> {
+        when (httpState) {
+            MonitorState.Requesting -> {
                 ""
             }
 
-            MonitorStatus.Complete -> {
+            MonitorState.Complete -> {
                 "$responseCode $responseMessage"
             }
 
-            MonitorStatus.Failed -> {
+            MonitorState.Failed -> {
                 error ?: ""
             }
         }
@@ -135,16 +135,16 @@ internal data class Monitor(
     }
 
     val responseCodeFormat by lazy(mode = LazyThreadSafetyMode.NONE) {
-        when (httpStatus) {
-            MonitorStatus.Requesting -> {
+        when (httpState) {
+            MonitorState.Requesting -> {
                 "..."
             }
 
-            MonitorStatus.Complete -> {
+            MonitorState.Complete -> {
                 responseCode.toString()
             }
 
-            MonitorStatus.Failed -> {
+            MonitorState.Failed -> {
                 "!!!"
             }
         }
@@ -166,16 +166,16 @@ internal data class Monitor(
         if (requestDate <= 0 || responseDate <= 0) {
             ""
         } else {
-            when (httpStatus) {
-                MonitorStatus.Requesting -> {
+            when (httpState) {
+                MonitorState.Requesting -> {
                     ""
                 }
 
-                MonitorStatus.Complete -> {
+                MonitorState.Complete -> {
                     "${responseDate - requestDate} ms"
                 }
 
-                MonitorStatus.Failed -> {
+                MonitorState.Failed -> {
                     ""
                 }
             }
@@ -183,16 +183,16 @@ internal data class Monitor(
     }
 
     val totalSizeFormat by lazy(mode = LazyThreadSafetyMode.NONE) {
-        when (httpStatus) {
-            MonitorStatus.Requesting -> {
+        when (httpState) {
+            MonitorState.Requesting -> {
                 ""
             }
 
-            MonitorStatus.Complete -> {
+            MonitorState.Complete -> {
                 FormatUtils.formatBytes(requestContentLength + responseContentLength)
             }
 
-            MonitorStatus.Failed -> {
+            MonitorState.Failed -> {
                 ""
             }
         }
@@ -201,14 +201,11 @@ internal data class Monitor(
 }
 
 @Stable
-internal data class MonitorHeader(val name: String, val value: String)
+internal data class MonitorPair(val name: String, val value: String)
 
 @Stable
-internal enum class MonitorStatus {
+internal enum class MonitorState {
     Requesting,
     Complete,
     Failed
 }
-
-@Stable
-internal data class MonitorDetail(val header: String, val value: String)

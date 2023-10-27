@@ -2,10 +2,9 @@ package github.leavesczy.monitor.utils
 
 import android.text.format.Formatter
 import github.leavesczy.monitor.db.Monitor
-import github.leavesczy.monitor.db.MonitorDetail
-import github.leavesczy.monitor.db.MonitorHeader
+import github.leavesczy.monitor.db.MonitorPair
 import github.leavesczy.monitor.provider.ContextProvider
-import github.leavesczy.monitor.provider.JsonProvider
+import github.leavesczy.monitor.provider.JsonHnadler
 import org.w3c.dom.Document
 import org.xml.sax.InputSource
 import org.xml.sax.SAXParseException
@@ -47,7 +46,7 @@ internal object FormatUtils {
         return Formatter.formatFileSize(ContextProvider.context, bytes)
     }
 
-    private fun formatHeaders(headers: List<MonitorHeader>): String {
+    private fun formatHeaders(headers: List<MonitorPair>): String {
         return buildString {
             for ((name, value) in headers) {
                 append(name)
@@ -65,7 +64,7 @@ internal object FormatUtils {
             }
 
             contentType.contains("json", true) -> {
-                JsonProvider.setPrettyPrinting(body)
+                JsonHnadler.setPrettyPrinting(body)
             }
 
             contentType.contains("xml", true) -> {
@@ -107,11 +106,11 @@ internal object FormatUtils {
         }
     }
 
-    fun getShareText(monitor: Monitor): String {
+    fun buildShareText(monitor: Monitor): String {
         return buildString {
-            val overview = buildMonitorOverview(monitor = monitor)
+            val overview = buildOverview(monitor = monitor)
             overview.forEach {
-                append(it.header)
+                append(it.name)
                 append(" : ")
                 append(it.value)
                 append("\n")
@@ -129,31 +128,31 @@ internal object FormatUtils {
         }
     }
 
-    fun buildMonitorOverview(monitor: Monitor): List<MonitorDetail> {
+    fun buildOverview(monitor: Monitor): List<MonitorPair> {
         return buildList {
-            add(MonitorDetail(header = "Url", value = monitor.url))
-            add(MonitorDetail(header = "Method", value = monitor.method))
-            add(MonitorDetail(header = "Protocol", value = monitor.protocol))
-            add(MonitorDetail(header = "Status", value = monitor.httpStatus.toString()))
-            add(MonitorDetail(header = "Response", value = monitor.responseSummaryText))
-            add(MonitorDetail(header = "TlsVersion", value = monitor.responseTlsVersion))
-            add(MonitorDetail(header = "CipherSuite", value = monitor.responseCipherSuite))
-            add(MonitorDetail(header = "Request Time", value = monitor.requestDateYMDHMSS))
-            add(MonitorDetail(header = "Response Time", value = monitor.responseDateYMDHMSS))
-            add(MonitorDetail(header = "Duration", value = monitor.requestDurationFormat))
+            add(MonitorPair(name = "Url", value = monitor.url))
+            add(MonitorPair(name = "Method", value = monitor.method))
+            add(MonitorPair(name = "Protocol", value = monitor.protocol))
+            add(MonitorPair(name = "State", value = monitor.httpState.toString()))
+            add(MonitorPair(name = "Response", value = monitor.responseSummaryText))
+            add(MonitorPair(name = "TlsVersion", value = monitor.responseTlsVersion))
+            add(MonitorPair(name = "CipherSuite", value = monitor.responseCipherSuite))
+            add(MonitorPair(name = "Request Time", value = monitor.requestDateYMDHMSS))
+            add(MonitorPair(name = "Response Time", value = monitor.responseDateYMDHMSS))
+            add(MonitorPair(name = "Duration", value = monitor.requestDurationFormat))
             add(
-                MonitorDetail(
-                    header = "Request Size",
+                MonitorPair(
+                    name = "Request Size",
                     value = formatBytes(monitor.requestContentLength)
                 )
             )
             add(
-                MonitorDetail(
-                    header = "Response Size",
+                MonitorPair(
+                    name = "Response Size",
                     value = formatBytes(monitor.responseContentLength)
                 )
             )
-            add(MonitorDetail(header = "Total Size", value = monitor.totalSizeFormat))
+            add(MonitorPair(name = "Total Size", value = monitor.totalSizeFormat))
         }
     }
 

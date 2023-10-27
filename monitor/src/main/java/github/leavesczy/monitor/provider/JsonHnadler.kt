@@ -12,7 +12,7 @@ import java.lang.reflect.Type
  * @Desc:
  * @Github：https://github.com/leavesCZY
  */
-internal object JsonProvider {
+internal object JsonHnadler {
 
     private var gson = GsonBuilder()
         .setPrettyPrinting()

@@ -68,6 +68,6 @@ dependencies {
     implementation(libs.retrofit)
     implementation(libs.retrofit.converter.gson)
     implementation(libs.okhttp.logging.interceptor)
-    debugImplementation(project(":monitor"))
-    releaseImplementation(project(":monitor-no-op"))
+    implementation(project(":monitor"))
+//    releaseImplementation(project(":monitor-no-op"))
 }

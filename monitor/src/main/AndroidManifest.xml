@@ -7,16 +7,15 @@
             android:exported="false"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            android:taskAffinity="github.leavesczy.monitor.singleTask"
+            android:taskAffinity="github.leavesczy.monitor"
             android:theme="@style/Theme.Monitor" />
         <activity
             android:name=".ui.MonitorDetailsActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation|locale|layoutDirection|uiMode"
             android:exported="false"
             android:launchMode="singleTask"
-            android:parentActivityName=".ui.MonitorActivity"
             android:screenOrientation="portrait"
-            android:taskAffinity="github.leavesczy.monitor.singleTask"
+            android:taskAffinity="github.leavesczy.monitor"
             android:theme="@style/Theme.Monitor" />
     </application>
 
