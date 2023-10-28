@@ -1,6 +1,5 @@
 package github.leavesczy.monitor.provider
 
-import com.google.gson.FieldNamingPolicy
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonParser
 import java.lang.reflect.ParameterizedType
@@ -12,11 +11,12 @@ import java.lang.reflect.Type
  * @Desc:
  * @Github：https://github.com/leavesCZY
  */
-internal object JsonHnadler {
+internal object JsonHandler {
 
     private var gson = GsonBuilder()
+        .disableHtmlEscaping()
+        .serializeNulls()
         .setPrettyPrinting()
-        .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
         .create()
 
     fun setPrettyPrinting(json: String): String {

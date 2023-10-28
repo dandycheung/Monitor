@@ -4,7 +4,7 @@ import android.text.format.Formatter
 import github.leavesczy.monitor.db.Monitor
 import github.leavesczy.monitor.db.MonitorPair
 import github.leavesczy.monitor.provider.ContextProvider
-import github.leavesczy.monitor.provider.JsonHnadler
+import github.leavesczy.monitor.provider.JsonHandler
 import org.w3c.dom.Document
 import org.xml.sax.InputSource
 import org.xml.sax.SAXParseException
@@ -64,7 +64,7 @@ internal object FormatUtils {
             }
 
             contentType.contains("json", true) -> {
-                JsonHnadler.setPrettyPrinting(body)
+                JsonHandler.setPrettyPrinting(body)
             }
 
             contentType.contains("xml", true) -> {

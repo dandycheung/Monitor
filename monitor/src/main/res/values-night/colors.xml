@@ -13,6 +13,6 @@
     <color name="monitor_http_state_successful">#DEFFFFFF</color>
     <color name="monitor_http_state_successful_sub">#CCFFFFFF</color>
     <color name="monitor_http_state_unsuccessful">#FFFF545C</color>
-    <color name="monitor_http_state_unsuccessful_sub">#E6FF545C</color>
+    <color name="monitor_http_state_unsuccessful_sub">#CCFFFFFF</color>
     <color name="monitor_navigation_bar">#FF101010</color>
 </resources>
