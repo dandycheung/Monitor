@@ -87,21 +87,30 @@ internal fun MonitorPage(
 
 @Composable
 private fun MonitorItem(monitor: Monitor, onClick: (Monitor) -> Unit) {
-    val color = when (monitor.httpState) {
+    val titleColor: Int
+    val subtitleColor: Int
+    when (monitor.httpState) {
         MonitorState.Requesting -> {
-            R.color.monitor_http_state_requesting
+            titleColor = R.color.monitor_http_state_requesting
+            subtitleColor = R.color.monitor_http_state_requesting_sub
         }
 
         MonitorState.Complete -> {
-            if (monitor.responseCode == 200) {
+            titleColor = if (monitor.responseCode == 200) {
                 R.color.monitor_http_state_successful
             } else {
                 R.color.monitor_http_state_unsuccessful
             }
+            subtitleColor = if (monitor.responseCode == 200) {
+                R.color.monitor_http_state_successful_sub
+            } else {
+                R.color.monitor_http_state_unsuccessful_sub
+            }
         }
 
         MonitorState.Failed -> {
-            R.color.monitor_http_state_unsuccessful
+            titleColor = R.color.monitor_http_state_unsuccessful
+            subtitleColor = R.color.monitor_http_state_unsuccessful_sub
         }
     }
     Column(
@@ -126,7 +135,7 @@ private fun MonitorItem(monitor: Monitor, onClick: (Monitor) -> Unit) {
                 fontFamily = FontFamily.SansSerif,
                 fontWeight = FontWeight.Medium,
                 fontSize = 18.sp,
-                color = colorResource(id = color)
+                color = colorResource(id = titleColor)
             )
             Text(
                 modifier = Modifier.width(width = responseCodeWidth),
@@ -148,7 +157,7 @@ private fun MonitorItem(monitor: Monitor, onClick: (Monitor) -> Unit) {
             fontFamily = FontFamily.Default,
             fontWeight = FontWeight.Normal,
             fontSize = 16.sp,
-            color = colorResource(id = color).copy(alpha = 0.8f)
+            color = colorResource(id = subtitleColor)
         )
         Text(
             modifier = Modifier

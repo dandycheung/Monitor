@@ -6,15 +6,18 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import github.leavesczy.monitor.R
 import github.leavesczy.monitor.db.MonitorDatabase
-import github.leavesczy.monitor.logic.MonitorDetailViewModel
 import github.leavesczy.monitor.utils.FormatUtils
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 
 /**
@@ -35,26 +38,77 @@ internal class MonitorDetailsActivity : AppCompatActivity() {
         intent.getLongExtra(KEY_ID, 0)
     }
 
-    private val monitorDetailViewModel by viewModels<MonitorDetailViewModel>(factoryProducer = {
-        object : ViewModelProvider.NewInstanceFactory() {
-            @Suppress("UNCHECKED_CAST")
-            override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return MonitorDetailViewModel(id = id) as T
-            }
-        }
-    })
+    private var mainPageViewState by mutableStateOf(
+        value = MonitorDetailPageViewState(
+            title = "",
+            tabTagList = emptyList()
+        )
+    )
+
+    private var overviewPageViewState by mutableStateOf(
+        value = MonitorDetailOverviewPageViewState(
+            overview = emptyList()
+        )
+    )
+
+    private var requestPageViewState by mutableStateOf(
+        value = MonitorDetailRequestPageViewState(
+            headers = emptyList(),
+            bodyFormat = ""
+        )
+    )
+
+    private var responsePageViewState by mutableStateOf(
+        value = MonitorDetailResponsePageViewState(
+            headers = emptyList(),
+            bodyFormat = ""
+        )
+    )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             MonitorDetailsPage(
-                mainPageViewState = monitorDetailViewModel.mainPageViewState,
-                overviewPageViewState = monitorDetailViewModel.overviewPageViewState,
-                requestPageViewState = monitorDetailViewModel.requestPageViewState,
-                responsePageViewState = monitorDetailViewModel.responsePageViewState,
+                mainPageViewState = mainPageViewState,
+                overviewPageViewState = overviewPageViewState,
+                requestPageViewState = requestPageViewState,
+                responsePageViewState = responsePageViewState,
                 onClickBack = ::onClickBack,
                 onClickShare = ::onClickShare
             )
+        }
+        initObserver()
+    }
+
+    private fun initObserver() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(state = Lifecycle.State.RESUMED) {
+                MonitorDatabase.instance.monitorDao.queryFlow(id = id)
+                    .distinctUntilChanged()
+                    .collectLatest {
+                        mainPageViewState = MonitorDetailPageViewState(
+                            title = String.format("%s  %s", it.method, it.pathWithQuery),
+                            tabTagList = listOf(
+                                "Overview",
+                                "Request",
+                                "Response"
+                            )
+                        )
+                        overviewPageViewState = MonitorDetailOverviewPageViewState(
+                            overview = FormatUtils.buildOverview(
+                                monitor = it
+                            )
+                        )
+                        requestPageViewState = MonitorDetailRequestPageViewState(
+                            headers = it.requestHeaders,
+                            bodyFormat = it.requestBodyFormat
+                        )
+                        responsePageViewState = MonitorDetailResponsePageViewState(
+                            headers = it.responseHeaders,
+                            bodyFormat = it.responseBodyFormat
+                        )
+                    }
+            }
         }
     }
 

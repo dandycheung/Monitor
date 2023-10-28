@@ -131,13 +131,14 @@ class MonitorInterceptor(context: Context) : Interceptor {
         }
         val responseBody = response.body
         val responseContentType = responseBody?.contentType()?.toString() ?: ""
-        val responseContentLength = responseBody?.contentLength() ?: 0
+        var responseContentLength = responseBody?.contentLength() ?: 0
         val mResponseBody = if (responseBody == null || !response.promisesBody()) {
             ""
         } else if (ResponseUtils.bodyHasUnknownEncoding(headers = response.headers)) {
             "(encoded body omitted)"
         } else {
             val buffer = ResponseUtils.getNativeSource(response = response)
+            responseContentLength = buffer.size
             if (ResponseUtils.isProbablyUtf8(buffer)) {
                 if (responseContentLength != 0L) {
                     val charset = responseBody.contentType()?.charset(Charsets.UTF_8)

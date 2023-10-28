@@ -9,7 +9,10 @@
     <color name="monitor_top_bar_tab_text_selected">#FFFFFFFF</color>
     <color name="monitor_top_bar_tab_text_unselected">#DEFFFFFF</color>
     <color name="monitor_http_state_requesting">#FF8996A2</color>
+    <color name="monitor_http_state_requesting_sub">#CC8996A2</color>
     <color name="monitor_http_state_successful">#FF001018</color>
+    <color name="monitor_http_state_successful_sub">#CC001018</color>
     <color name="monitor_http_state_unsuccessful">#FFFF545C</color>
+    <color name="monitor_http_state_unsuccessful_sub">#E6FF545C</color>
     <color name="monitor_navigation_bar">#FFFFFFFF</color>
 </resources>

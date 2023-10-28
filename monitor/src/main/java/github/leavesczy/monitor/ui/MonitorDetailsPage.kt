@@ -39,10 +39,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import github.leavesczy.monitor.R
 import github.leavesczy.monitor.db.MonitorPair
-import github.leavesczy.monitor.logic.MonitorDetailOverviewPageViewState
-import github.leavesczy.monitor.logic.MonitorDetailPageViewState
-import github.leavesczy.monitor.logic.MonitorDetailRequestPageViewState
-import github.leavesczy.monitor.logic.MonitorDetailResponsePageViewState
 import kotlinx.coroutines.launch
 
 /**
