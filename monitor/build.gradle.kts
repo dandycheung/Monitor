@@ -73,7 +73,7 @@ if (signingKeyId != null
             create<MavenPublication>("release") {
                 groupId = "io.github.leavesczy"
                 artifactId = "monitor"
-                version = libs.versions.monitor.get()
+                version = libs.versions.monitor.publishing.get()
                 afterEvaluate {
                     from(components["release"])
                 }
