@@ -1,20 +1,21 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <application>
+        <provider
+            android:name=".internal.MonitorContentProvider"
+            android:authorities="${applicationId}.monitor.init.provider"
+            android:exported="false" />
+
         <activity
-            android:name=".ui.MonitorActivity"
-            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation|locale|layoutDirection"
+            android:name=".internal.ui.MonitorActivity"
             android:exported="false"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait"
             android:taskAffinity="github.leavesczy.monitor"
             android:theme="@style/Theme.Monitor" />
         <activity
-            android:name=".ui.MonitorDetailsActivity"
-            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation|locale|layoutDirection"
+            android:name=".internal.ui.MonitorDetailsActivity"
             android:exported="false"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait"
             android:taskAffinity="github.leavesczy.monitor"
             android:theme="@style/Theme.Monitor" />
     </application>

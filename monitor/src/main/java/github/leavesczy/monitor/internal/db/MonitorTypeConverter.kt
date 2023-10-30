@@ -1,7 +1,7 @@
-package github.leavesczy.monitor.db
+package github.leavesczy.monitor.internal.db
 
 import androidx.room.TypeConverter
-import github.leavesczy.monitor.provider.JsonHandler
+import github.leavesczy.monitor.internal.JsonHandler
 
 /**
  * @Author: leavesCZY

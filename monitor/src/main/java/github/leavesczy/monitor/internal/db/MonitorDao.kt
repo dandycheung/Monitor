@@ -1,4 +1,4 @@
-package github.leavesczy.monitor.db
+package github.leavesczy.monitor.internal.db
 
 import androidx.room.Dao
 import androidx.room.Insert

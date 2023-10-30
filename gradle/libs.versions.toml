@@ -23,8 +23,8 @@ okhttp = "4.12.0"
 
 retrofit = "2.9.0"
 
-monitor-remote = "1.4.0"
-monitor-publishing = "1.4.0"
+monitor-remote = "1.4.1-beta01"
+monitor-publishing = "1.4.1-beta01"
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "android-plugin" }

@@ -1,4 +1,4 @@
-package github.leavesczy.monitor.ui
+package github.leavesczy.monitor.internal.ui
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -24,7 +24,6 @@ import androidx.compose.material3.TabRow
 import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -38,7 +37,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import github.leavesczy.monitor.R
-import github.leavesczy.monitor.db.MonitorPair
+import github.leavesczy.monitor.internal.db.MonitorPair
 import kotlinx.coroutines.launch
 
 /**
@@ -58,7 +57,6 @@ internal fun MonitorDetailsPage(
     Scaffold(
         modifier = Modifier
             .fillMaxSize(),
-        containerColor = colorResource(id = R.color.monitor_page_background),
         topBar = {
             MonitorDetailsTopBar(
                 title = mainPageViewState.title,
@@ -130,19 +128,12 @@ private fun MonitorDetailsTopBar(
 ) {
     CenterAlignedTopAppBar(
         modifier = Modifier,
-        colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-            containerColor = colorResource(id = R.color.monitor_top_bar_background),
-            navigationIconContentColor = colorResource(id = R.color.monitor_top_bar_content),
-            titleContentColor = colorResource(id = R.color.monitor_top_bar_content),
-            actionIconContentColor = colorResource(id = R.color.monitor_top_bar_content)
-        ),
         title = {
             Text(
                 modifier = Modifier.fillMaxWidth(),
                 text = title,
                 maxLines = 2,
-                overflow = TextOverflow.Ellipsis,
-                fontSize = 19.sp
+                overflow = TextOverflow.Ellipsis
             )
         },
         navigationIcon = {
@@ -182,12 +173,10 @@ private fun ScrollableTabRow(
     TabRow(
         modifier = Modifier.fillMaxWidth(),
         selectedTabIndex = selectedTabIndex,
-        containerColor = colorResource(id = R.color.monitor_top_bar_background),
         indicator = @Composable { tabPositions ->
             if (selectedTabIndex < tabPositions.size) {
                 TabRowDefaults.Indicator(
-                    modifier = Modifier.tabIndicatorOffset(tabPositions[selectedTabIndex]),
-                    color = colorResource(id = R.color.monitor_top_bar_indicator)
+                    modifier = Modifier.tabIndicatorOffset(tabPositions[selectedTabIndex])
                 )
             }
         },
@@ -232,7 +221,7 @@ private fun MonitorDetailsOverviewPage(pageViewState: MonitorDetailOverviewPageV
         items(
             items = pageViewState.overview,
             contentType = {
-                "overviewItem"
+                "MonitorPairItem"
             }
         ) {
             MonitorPairItem(pair = it)
@@ -259,7 +248,7 @@ private fun MonitorDetailsPage(
         items(
             items = headers,
             contentType = {
-                "headers"
+                "MonitorPairItem"
             }
         ) {
             MonitorPairItem(pair = it)
@@ -274,8 +263,8 @@ private fun MonitorDetailsPage(
                     style = TextStyle(
                         fontFamily = FontFamily.Default,
                         fontWeight = FontWeight.Normal,
-                        fontSize = 18.sp,
-                        color = colorResource(id = R.color.monitor_http_state_successful)
+                        fontSize = 17.sp,
+                        color = colorResource(id = R.color.monitor_http_body)
                     )
                 )
             }
@@ -288,7 +277,7 @@ private fun MonitorPairItem(pair: MonitorPair) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 5.dp),
+            .padding(vertical = 4.dp),
         verticalAlignment = Alignment.Top
     ) {
         Text(
@@ -300,7 +289,7 @@ private fun MonitorPairItem(pair: MonitorPair) {
                 fontFamily = FontFamily.SansSerif,
                 fontWeight = FontWeight.Medium,
                 fontSize = 16.sp,
-                color = colorResource(id = R.color.monitor_http_state_successful)
+                color = colorResource(id = R.color.monitor_http_status_successful)
             )
         )
         Text(
@@ -311,7 +300,7 @@ private fun MonitorPairItem(pair: MonitorPair) {
                 fontFamily = FontFamily.Default,
                 fontWeight = FontWeight.Normal,
                 fontSize = 15.sp,
-                color = colorResource(id = R.color.monitor_http_state_successful)
+                color = colorResource(id = R.color.monitor_http_status_successful)
             )
         )
     }

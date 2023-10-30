@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="monitor_library_name">Monitor</string>
+    <string name="monitor_overview">Overview</string>
+    <string name="monitor_request">Request</string>
+    <string name="monitor_response">Response</string>
+    <string name="monitor_encoded_body_omitted">(encoded body omitted)</string>
 </resources>

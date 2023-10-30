@@ -1,18 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="monitor_page_background">#FFFFFFFF</color>
-    <color name="monitor_item_background">#FFFFFFFF</color>
-    <color name="monitor_item_separator">#FFEFF1F3</color>
     <color name="monitor_top_bar_background">#FF0277BD</color>
-    <color name="monitor_top_bar_content">#FFFFFFFF</color>
-    <color name="monitor_top_bar_indicator">#FFFFFFFF</color>
     <color name="monitor_top_bar_tab_text_selected">#FFFFFFFF</color>
     <color name="monitor_top_bar_tab_text_unselected">#DEFFFFFF</color>
-    <color name="monitor_http_state_requesting">#FF8996A2</color>
-    <color name="monitor_http_state_requesting_sub">#CC8996A2</color>
-    <color name="monitor_http_state_successful">#FF001018</color>
-    <color name="monitor_http_state_successful_sub">#CC001018</color>
-    <color name="monitor_http_state_unsuccessful">#FFFF545C</color>
-    <color name="monitor_http_state_unsuccessful_sub">#CC001018</color>
+    <color name="monitor_http_status_requesting">#FF8996A2</color>
+    <color name="monitor_http_status_requesting_sub">#CC8996A2</color>
+    <color name="monitor_http_status_successful">#FF001018</color>
+    <color name="monitor_http_status_successful_sub">#CC001018</color>
+    <color name="monitor_http_status_unsuccessful">#FFFF545C</color>
+    <color name="monitor_http_status_unsuccessful_sub">#CC001018</color>
+    <color name="monitor_http_body">#FF001018</color>
     <color name="monitor_navigation_bar">#FFFFFFFF</color>
 </resources>

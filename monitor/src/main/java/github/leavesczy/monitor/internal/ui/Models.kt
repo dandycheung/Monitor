@@ -1,7 +1,7 @@
-package github.leavesczy.monitor.ui
+package github.leavesczy.monitor.internal.ui
 
 import androidx.compose.runtime.Stable
-import github.leavesczy.monitor.db.MonitorPair
+import github.leavesczy.monitor.internal.db.MonitorPair
 
 /**
  * @Author: leavesCZY

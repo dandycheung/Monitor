@@ -1,6 +1,7 @@
-package github.leavesczy.monitor.provider
+package github.leavesczy.monitor.internal
 
 import com.google.gson.GsonBuilder
+import com.google.gson.JsonParseException
 import com.google.gson.JsonParser
 import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type
@@ -13,22 +14,30 @@ import java.lang.reflect.Type
  */
 internal object JsonHandler {
 
-    private var gson = GsonBuilder()
-        .disableHtmlEscaping()
-        .serializeNulls()
-        .setPrettyPrinting()
-        .create()
+    private val gson by lazy(mode = LazyThreadSafetyMode.NONE) {
+        GsonBuilder()
+            .disableHtmlEscaping()
+            .serializeNulls()
+            .create()
+    }
 
-    fun setPrettyPrinting(json: String): String {
-        return try {
-            gson.toJson(JsonParser.parseString(json))
-        } catch (e: Throwable) {
-            json
-        }
+    private val prettyPrintingGson by lazy(mode = LazyThreadSafetyMode.NONE) {
+        gson.newBuilder()
+            .setPrettyPrinting()
+            .create()
     }
 
     fun toJson(ob: Any): String {
         return gson.toJson(ob)
+    }
+
+    fun toPrettyJson(json: String): String {
+        return try {
+            prettyPrintingGson.toJson(JsonParser.parseString(json))
+        } catch (e: JsonParseException) {
+            e.printStackTrace()
+            json
+        }
     }
 
     fun <T> fromJsonArray(json: String, clazz: Class<T>): List<T> {

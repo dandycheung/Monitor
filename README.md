@@ -11,7 +11,7 @@ Monitor 是一个适用于 OkHttp 和 Retrofit 的可视化抓包工具
 从 v1.4.0 版本开始，Monitor 的发布地址从 jitpack 迁移到了 Maven Central，因此依赖库地址和依赖名均有所变化
 
 ```kotlin
-# v1.4.0 版本开始
+## v1.4.0 版本开始
 dependencyResolutionManagement {
     repositories {
         google()
@@ -26,7 +26,7 @@ dependencies {
 }
 
 
-# v1.4.0 版本之前
+## v1.4.0 版本之前
 dependencyResolutionManagement {
     repositories {
         google()

@@ -1,4 +1,4 @@
-package github.leavesczy.monitor.provider
+package github.leavesczy.monitor.internal
 
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -10,8 +10,8 @@ import androidx.core.app.NotificationChannelCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import github.leavesczy.monitor.R
-import github.leavesczy.monitor.db.Monitor
-import github.leavesczy.monitor.ui.MonitorActivity
+import github.leavesczy.monitor.internal.db.Monitor
+import github.leavesczy.monitor.internal.ui.MonitorActivity
 
 /**
  * @Author: leavesCZY

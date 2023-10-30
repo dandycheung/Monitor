@@ -1,4 +1,4 @@
-package github.leavesczy.monitor.ui
+package github.leavesczy.monitor.internal.ui
 
 import android.content.Intent
 import android.os.Bundle
@@ -7,9 +7,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.lifecycleScope
-import github.leavesczy.monitor.db.Monitor
-import github.leavesczy.monitor.db.MonitorDatabase
-import github.leavesczy.monitor.provider.MonitorNotificationHandler
+import github.leavesczy.monitor.internal.MonitorNotificationHandler
+import github.leavesczy.monitor.internal.db.Monitor
+import github.leavesczy.monitor.internal.db.MonitorDatabase
 import kotlinx.coroutines.launch
 
 /**
@@ -23,14 +23,16 @@ internal class MonitorActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            val queryFlow = MonitorDatabase.instance.monitorDao.queryFlow(limit = 300)
-            val monitorList by queryFlow.collectAsState(initial = emptyList())
-            MonitorPage(
-                onClickBack = ::onClickBack,
-                onClickClear = ::onClickClear,
-                monitorList = monitorList,
-                onClickMonitorItem = ::onClickMonitorItem
-            )
+            MonitorTheme {
+                val queryFlow = MonitorDatabase.instance.monitorDao.queryFlow(limit = 300)
+                val monitorList by queryFlow.collectAsState(initial = emptyList())
+                MonitorPage(
+                    onClickBack = ::onClickBack,
+                    onClickClear = ::onClickClear,
+                    monitorList = monitorList,
+                    onClickMonitorItem = ::onClickMonitorItem
+                )
+            }
         }
     }
 

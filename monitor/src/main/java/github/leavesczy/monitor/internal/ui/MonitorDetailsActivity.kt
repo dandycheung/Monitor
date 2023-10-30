@@ -1,4 +1,4 @@
-package github.leavesczy.monitor.ui
+package github.leavesczy.monitor.internal.ui
 
 import android.app.Activity
 import android.content.ActivityNotFoundException
@@ -14,8 +14,9 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import github.leavesczy.monitor.R
-import github.leavesczy.monitor.db.MonitorDatabase
-import github.leavesczy.monitor.utils.FormatUtils
+import github.leavesczy.monitor.internal.db.MonitorDatabase
+import github.leavesczy.monitor.internal.db.buildOverview
+import github.leavesczy.monitor.internal.db.buildShareText
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
@@ -68,14 +69,16 @@ internal class MonitorDetailsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            MonitorDetailsPage(
-                mainPageViewState = mainPageViewState,
-                overviewPageViewState = overviewPageViewState,
-                requestPageViewState = requestPageViewState,
-                responsePageViewState = responsePageViewState,
-                onClickBack = ::onClickBack,
-                onClickShare = ::onClickShare
-            )
+            MonitorTheme {
+                MonitorDetailsPage(
+                    mainPageViewState = mainPageViewState,
+                    overviewPageViewState = overviewPageViewState,
+                    requestPageViewState = requestPageViewState,
+                    responsePageViewState = responsePageViewState,
+                    onClickBack = ::onClickBack,
+                    onClickShare = ::onClickShare
+                )
+            }
         }
         initObserver()
     }
@@ -87,17 +90,15 @@ internal class MonitorDetailsActivity : AppCompatActivity() {
                     .distinctUntilChanged()
                     .collectLatest {
                         mainPageViewState = MonitorDetailPageViewState(
-                            title = String.format("%s  %s", it.method, it.pathWithQuery),
+                            title = it.method + " " + it.pathWithQuery,
                             tabTagList = listOf(
-                                "Overview",
-                                "Request",
-                                "Response"
+                                getString(R.string.monitor_overview),
+                                getString(R.string.monitor_request),
+                                getString(R.string.monitor_response),
                             )
                         )
                         overviewPageViewState = MonitorDetailOverviewPageViewState(
-                            overview = FormatUtils.buildOverview(
-                                monitor = it
-                            )
+                            overview = it.buildOverview()
                         )
                         requestPageViewState = MonitorDetailRequestPageViewState(
                             headers = it.requestHeaders,
@@ -119,10 +120,10 @@ internal class MonitorDetailsActivity : AppCompatActivity() {
     private fun onClickShare() {
         lifecycleScope.launch {
             try {
-                val monitorHttp = MonitorDatabase.instance.monitorDao.query(id = id)
+                val monitor = MonitorDatabase.instance.monitorDao.query(id = id)
                 share(
                     context = applicationContext,
-                    content = FormatUtils.buildShareText(monitor = monitorHttp)
+                    content = monitor.buildShareText()
                 )
             } catch (_: ActivityNotFoundException) {
 

@@ -1,11 +1,11 @@
-package github.leavesczy.monitor.db
+package github.leavesczy.monitor.internal.db
 
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import github.leavesczy.monitor.provider.ContextProvider
+import github.leavesczy.monitor.internal.ContextProvider
 
 /**
  * @Author: leavesCZY
@@ -15,7 +15,7 @@ import github.leavesczy.monitor.provider.ContextProvider
  */
 @Database(
     entities = [Monitor::class],
-    version = 30
+    version = 32
 )
 @TypeConverters(MonitorTypeConverter::class)
 internal abstract class MonitorDatabase : RoomDatabase() {
