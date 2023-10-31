@@ -9,7 +9,6 @@ androidx-junit = "1.1.5"
 androidx-espresso = "3.5.1"
 androidx-appcompat = "1.6.1"
 androidx-activity-compose = "1.8.0"
-androidx-lifecycle-runtime-ktx = "2.6.2"
 
 google-material = "1.10.0"
 google-gson = "2.10.1"
@@ -23,8 +22,8 @@ okhttp = "4.12.0"
 
 retrofit = "2.9.0"
 
-monitor-remote = "1.4.1-beta01"
-monitor-publishing = "1.4.1-beta01"
+monitor-remote = "1.4.1"
+monitor-publishing = "1.4.1"
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "android-plugin" }
@@ -39,7 +38,6 @@ test-androidx-espresso = { module = "androidx.test.espresso:espresso-core", vers
 
 androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "androidx-appcompat" }
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activity-compose" }
-androidx-lifecycle-runtime-ktx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "androidx-lifecycle-runtime-ktx" }
 
 google-material = { module = "com.google.android.material:material", version.ref = "google-material" }
 google-gson = { module = "com.google.code.gson:gson", version.ref = "google-gson" }

@@ -10,13 +10,13 @@
             android:name=".internal.ui.MonitorActivity"
             android:exported="false"
             android:launchMode="singleTask"
-            android:taskAffinity="github.leavesczy.monitor"
+            android:taskAffinity="${applicationId}.monitor"
             android:theme="@style/Theme.Monitor" />
         <activity
             android:name=".internal.ui.MonitorDetailsActivity"
             android:exported="false"
             android:launchMode="singleTask"
-            android:taskAffinity="github.leavesczy.monitor"
+            android:taskAffinity="${applicationId}.monitor"
             android:theme="@style/Theme.Monitor" />
     </application>
 

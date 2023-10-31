@@ -107,10 +107,10 @@ class MainActivity : AppCompatActivity() {
         apiService.gzip().enqueue(callback)
         apiService.xml().enqueue(callback)
         apiService.utf8().enqueue(callback)
-        apiService.status(code = 200).enqueue(callback)
-        apiService.status(code = 201).enqueue(callback)
         apiService.delay(seconds = 2).enqueue(callback)
         apiService.stream(lines = 2).enqueue(callback)
+//        apiService.status(code = 200).enqueue(callback)
+//        apiService.status(code = 201).enqueue(callback)
 //        apiService.streamBytes(bytes = 2048).enqueue(callback)
 //        apiService.image("image/png").enqueue(callback)
     }
