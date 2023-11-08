@@ -30,7 +30,7 @@ internal abstract class MonitorDatabase : RoomDatabase() {
 
         val instance: MonitorDatabase
             get() {
-                return monitorDatabase ?: synchronized(lock = this) {
+                return monitorDatabase ?: synchronized(lock = MonitorDatabase::class.java) {
                     val cache = monitorDatabase
                     if (cache != null) {
                         return@synchronized cache

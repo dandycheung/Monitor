@@ -260,12 +260,11 @@ private fun MonitorDetailsPage(
                         .fillMaxWidth()
                         .padding(top = 30.dp),
                     text = bodyFormat,
-                    style = TextStyle(
-                        fontFamily = FontFamily.Default,
-                        fontWeight = FontWeight.Normal,
-                        fontSize = 17.sp,
-                        color = colorResource(id = R.color.monitor_http_body)
-                    )
+                    fontSize = 17.sp,
+                    lineHeight = 22.sp,
+                    fontFamily = FontFamily.Default,
+                    fontWeight = FontWeight.Normal,
+                    color = colorResource(id = R.color.monitor_http_body)
                 )
             }
         }

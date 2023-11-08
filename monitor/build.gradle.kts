@@ -2,8 +2,8 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.google.ksp)
-    id("maven-publish")
-    id("signing")
+    id(libs.plugins.maven.publish.get().pluginId)
+    id(libs.plugins.signing.get().pluginId)
 }
 
 android {
@@ -47,8 +47,6 @@ dependencies {
     implementation(libs.room.ktx)
     ksp(libs.room.compiler)
     implementation(platform(libs.compose.bom))
-    implementation(libs.compose.ui)
-    implementation(libs.compose.foundation)
     implementation(libs.compose.material.icons)
     implementation(libs.compose.material3)
 }

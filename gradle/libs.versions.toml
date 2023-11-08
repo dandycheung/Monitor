@@ -16,7 +16,7 @@ google-gson = "2.10.1"
 compose-bom = "2023.10.01"
 compose-compiler = "1.5.2"
 
-room = "2.5.0"
+room = "2.6.0"
 
 okhttp = "4.12.0"
 
@@ -30,6 +30,8 @@ android-application = { id = "com.android.application", version.ref = "android-p
 android-library = { id = "com.android.library", version.ref = "android-plugin" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin-plugin" }
 google-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp-plugin" }
+maven-publish = { id = "maven-publish" }
+signing = { id = "signing" }
 
 [libraries]
 test-junit = { module = "junit:junit", version.ref = "junit-junit" }
@@ -43,8 +45,6 @@ google-material = { module = "com.google.android.material:material", version.ref
 google-gson = { module = "com.google.code.gson:gson", version.ref = "google-gson" }
 
 compose-bom = { module = "androidx.compose:compose-bom", version.ref = "compose-bom" }
-compose-ui = { module = "androidx.compose.ui:ui" }
-compose-foundation = { module = "androidx.compose.foundation:foundation" }
 compose-material-icons = { module = "androidx.compose.material:material-icons-extended" }
 compose-material3 = { module = "androidx.compose.material3:material3" }
 
