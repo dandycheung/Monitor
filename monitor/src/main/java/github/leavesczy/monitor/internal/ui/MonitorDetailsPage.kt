@@ -29,7 +29,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -260,8 +259,8 @@ private fun MonitorDetailsPage(
                         .fillMaxWidth()
                         .padding(top = 30.dp),
                     text = bodyFormat,
-                    fontSize = 17.sp,
-                    lineHeight = 22.sp,
+                    fontSize = 16.sp,
+                    lineHeight = 21.sp,
                     fontFamily = FontFamily.Default,
                     fontWeight = FontWeight.Normal,
                     color = colorResource(id = R.color.monitor_http_body)
@@ -276,7 +275,7 @@ private fun MonitorPairItem(pair: MonitorPair) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 4.dp),
+            .padding(vertical = 1.dp),
         verticalAlignment = Alignment.Top
     ) {
         Text(
@@ -284,23 +283,19 @@ private fun MonitorPairItem(pair: MonitorPair) {
                 .weight(weight = 3.2f)
                 .padding(end = 10.dp),
             text = pair.name,
-            style = TextStyle(
-                fontFamily = FontFamily.SansSerif,
-                fontWeight = FontWeight.Medium,
-                fontSize = 16.sp,
-                color = colorResource(id = R.color.monitor_http_status_successful)
-            )
+            fontFamily = FontFamily.SansSerif,
+            fontWeight = FontWeight.Medium,
+            fontSize = 16.sp,
+            color = colorResource(id = R.color.monitor_http_status_successful)
         )
         Text(
             modifier = Modifier
                 .weight(weight = 5f),
             text = pair.value,
-            style = TextStyle(
-                fontFamily = FontFamily.Default,
-                fontWeight = FontWeight.Normal,
-                fontSize = 15.sp,
-                color = colorResource(id = R.color.monitor_http_status_successful)
-            )
+            fontFamily = FontFamily.Default,
+            fontWeight = FontWeight.Normal,
+            fontSize = 15.sp,
+            color = colorResource(id = R.color.monitor_http_status_successful)
         )
     }
 }

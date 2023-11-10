@@ -27,6 +27,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import github.leavesczy.monitor.R
 import github.leavesczy.monitor.internal.db.Monitor
@@ -104,10 +106,16 @@ private fun MonitorItem(monitor: Monitor, onClick: (Monitor) -> Unit) {
             subtitleColor = R.color.monitor_http_status_unsuccessful_sub
         }
     }
-    val titleTextStyle =
-        MaterialTheme.typography.titleMedium.copy(color = colorResource(id = titleColor))
-    val subtitleTextStyle =
-        MaterialTheme.typography.bodySmall.copy(color = colorResource(id = subtitleColor))
+    val titleTextStyle = MaterialTheme.typography.titleMedium.copy(
+        fontFamily = FontFamily.SansSerif,
+        fontWeight = FontWeight.Medium,
+        color = colorResource(id = titleColor)
+    )
+    val subtitleTextStyle = MaterialTheme.typography.bodySmall.copy(
+        fontFamily = FontFamily.Default,
+        fontWeight = FontWeight.Normal,
+        color = colorResource(id = subtitleColor)
+    )
     Column(
         modifier = Modifier
             .fillMaxWidth()

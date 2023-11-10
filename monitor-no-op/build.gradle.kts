@@ -10,6 +10,7 @@ android {
     compileSdk = 34
     defaultConfig {
         minSdk = 21
+        consumerProguardFiles.add(File("consumer-rules.pro"))
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
@@ -91,15 +92,5 @@ if (signingKeyId != null
     }
     signing {
         sign(publishing.publications["release"])
-    }
-} else {
-    publishing {
-        publications {
-            create<MavenPublication>("release") {
-                afterEvaluate {
-                    from(components["release"])
-                }
-            }
-        }
     }
 }

@@ -12,7 +12,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 
-private val LightColorScheme = lightColorScheme(
+private val lightColorScheme = lightColorScheme(
     primary = Color(0xFFFFFFFF),
     background = Color(0xFFFFFFFF),
     surface = Color(0xFF0277BD),
@@ -21,7 +21,7 @@ private val LightColorScheme = lightColorScheme(
     outlineVariant = Color(0xFFEFF1F3),
 )
 
-private val DarkColorScheme = darkColorScheme(
+private val darkColorScheme = darkColorScheme(
     primary = Color(0xFFFFFFFF),
     background = Color(0xFF101010),
     surface = Color(0xFF181818),
@@ -30,7 +30,7 @@ private val DarkColorScheme = darkColorScheme(
     outlineVariant = Color(0xFF333333),
 )
 
-private val Typography = Typography(
+private val typography = Typography(
     titleMedium = TextStyle(
         fontFamily = FontFamily.SansSerif,
         fontWeight = FontWeight.Medium,
@@ -60,13 +60,13 @@ internal fun MonitorTheme(
     content: @Composable () -> Unit
 ) {
     val colorScheme = if (darkTheme) {
-        DarkColorScheme
+        darkColorScheme
     } else {
-        LightColorScheme
+        lightColorScheme
     }
     MaterialTheme(
         colorScheme = colorScheme,
-        typography = Typography,
+        typography = typography,
         content = content
     )
 }

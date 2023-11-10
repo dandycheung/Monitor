@@ -26,7 +26,6 @@ android {
     }
     buildFeatures {
         compose = true
-        buildConfig = false
     }
     composeOptions {
         kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
@@ -112,15 +111,5 @@ if (signingKeyId != null
     }
     signing {
         sign(publishing.publications["release"])
-    }
-} else {
-    publishing {
-        publications {
-            create<MavenPublication>("release") {
-                afterEvaluate {
-                    from(components["release"])
-                }
-            }
-        }
     }
 }

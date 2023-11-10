@@ -42,7 +42,7 @@ internal object MonitorNotificationHandler {
     private val transactionBuffer = LongSparseArray<Monitor>()
 
     @Volatile
-    private var transactionCount: Int = 0
+    private var transactionCount = 0
 
     init {
         val channel = NotificationChannelCompat.Builder(
