@@ -1,17 +1,27 @@
+@file:OptIn(DelicateCoroutinesApi::class)
+
 package github.leavesczy.monitor.internal
 
+import android.app.Application
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Build
-import android.util.LongSparseArray
 import androidx.core.app.NotificationChannelCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import github.leavesczy.monitor.R
-import github.leavesczy.monitor.internal.db.Monitor
+import github.leavesczy.monitor.internal.db.MonitorDatabase
 import github.leavesczy.monitor.internal.ui.MonitorActivity
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 
 /**
  * @Author: leavesCZY
@@ -21,86 +31,74 @@ import github.leavesczy.monitor.internal.ui.MonitorActivity
  */
 internal object MonitorNotificationHandler {
 
-    private const val CHANNEL_ID = "github.leavesczy.monitor"
+    private var monitorObserver: Job? = null
 
-    private const val CHANNEL_NAME = "Monitor"
-
-    private const val CHANNEL_DESCRIPTION = "Automatically record http requests"
-
-    private const val NOTIFICATION_TITLE = "Recording Http Activity"
-
-    private const val NOTIFICATION_ID = 0x20230708
-
-    private const val BUFFER_SIZE = 10
-
-    private val context: Context
-        get() = ContextProvider.context
-
-    private val notificationManager =
-        context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-
-    private val transactionBuffer = LongSparseArray<Monitor>()
-
-    @Volatile
-    private var transactionCount = 0
-
-    init {
+    fun init(context: Application) {
+        val channelId = context.getString(R.string.monitor_notification_channel_id)
+        val channelName = context.getString(R.string.monitor_notification_channel_name)
+        val channelDescription =
+            context.getString(R.string.monitor_notification_channel_description)
+        val notificationTitle = context.getString(R.string.monitor_notification_title)
         val channel = NotificationChannelCompat.Builder(
-            CHANNEL_ID,
+            channelId,
             NotificationManagerCompat.IMPORTANCE_DEFAULT
-        ).setName(CHANNEL_NAME)
-            .setDescription(CHANNEL_DESCRIPTION)
+        ).setName(channelName)
+            .setDescription(channelDescription)
             .setSound(null, null)
             .setLightsEnabled(false)
             .setVibrationEnabled(false)
+            .setShowBadge(true)
             .build()
         NotificationManagerCompat.from(context).createNotificationChannel(channel)
+        val notificationManager =
+            context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        monitorObserver?.cancel()
+        monitorObserver = GlobalScope.launch(context = Dispatchers.Default) {
+            val queryFlow = MonitorDatabase.instance.monitorDao.queryFlow(limit = 8)
+            queryFlow
+                .map {
+                    it.map { monitor ->
+                        monitor.notificationText
+                    }
+                }
+                .distinctUntilChanged()
+                .collectLatest {
+                    show(
+                        context = context,
+                        notificationManager = notificationManager,
+                        channelId = channelId,
+                        notificationTitle = notificationTitle,
+                        monitorList = it
+                    )
+                }
+        }
     }
 
-    @Synchronized
-    fun show(monitor: Monitor) {
-        addToBuffer(monitor = monitor)
-        val builder = NotificationCompat.Builder(context, CHANNEL_ID)
-            .setContentIntent(getContentIntent(context = context))
-            .setOnlyAlertOnce(true)
-            .setSmallIcon(R.drawable.monitor_icon_launcher)
-            .setContentTitle(NOTIFICATION_TITLE)
-            .setAutoCancel(false)
-        val inboxStyle = NotificationCompat.InboxStyle()
-        val size = transactionBuffer.size()
-        if (size > 0) {
-            builder.setContentText(transactionBuffer.valueAt(size - 1).notificationText)
-            for (i in size - 1 downTo 0) {
-                inboxStyle.addLine(transactionBuffer.valueAt(i).notificationText)
-            }
-        }
-        builder.setStyle(inboxStyle)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            builder.setSubText(transactionCount.toString())
+    private fun show(
+        context: Context,
+        notificationManager: NotificationManager,
+        channelId: String,
+        notificationTitle: String,
+        monitorList: List<String>
+    ) {
+        val notificationId = 0x20230708
+        if (monitorList.isEmpty()) {
+            notificationManager.cancel(notificationId)
         } else {
-            builder.setNumber(transactionCount)
+            val builder = NotificationCompat.Builder(context, channelId)
+                .setContentTitle(notificationTitle)
+                .setContentIntent(getContentIntent(context = context))
+                .setSmallIcon(R.drawable.monitor_notification_icon)
+                .setOnlyAlertOnce(true)
+                .setAutoCancel(false)
+            val inboxStyle = NotificationCompat.InboxStyle()
+            builder.setContentText(monitorList.first())
+            monitorList.forEach {
+                inboxStyle.addLine(it)
+            }
+            builder.setStyle(inboxStyle)
+            notificationManager.notify(notificationId, builder.build())
         }
-        notificationManager.notify(NOTIFICATION_ID, builder.build())
-    }
-
-    @Synchronized
-    private fun addToBuffer(monitor: Monitor) {
-        transactionCount++
-        transactionBuffer.put(monitor.id, monitor)
-        if (transactionBuffer.size() > BUFFER_SIZE) {
-            transactionBuffer.removeAt(0)
-        }
-    }
-
-    @Synchronized
-    fun clearBuffer() {
-        transactionBuffer.clear()
-        transactionCount = 0
-    }
-
-    @Synchronized
-    fun dismiss() {
-        notificationManager.cancel(NOTIFICATION_ID)
     }
 
     private fun getContentIntent(context: Context): PendingIntent {

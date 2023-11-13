@@ -7,7 +7,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.lifecycleScope
-import github.leavesczy.monitor.internal.MonitorNotificationHandler
 import github.leavesczy.monitor.internal.db.Monitor
 import github.leavesczy.monitor.internal.db.MonitorDatabase
 import kotlinx.coroutines.launch
@@ -43,14 +42,12 @@ internal class MonitorActivity : AppCompatActivity() {
     private fun onClickClear() {
         lifecycleScope.launch {
             MonitorDatabase.instance.monitorDao.deleteAll()
-            MonitorNotificationHandler.clearBuffer()
-            MonitorNotificationHandler.dismiss()
         }
     }
 
     private fun onClickMonitorItem(monitor: Monitor) {
         val intent = Intent(this, MonitorDetailsActivity::class.java)
-        intent.putExtra(MonitorDetailsActivity.KEY_ID, monitor.id)
+        intent.putExtra(MonitorDetailsActivity.keyMonitorId, monitor.id)
         startActivity(intent)
     }
 

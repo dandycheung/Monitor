@@ -12,7 +12,7 @@ import java.lang.reflect.Type
  * @Desc:
  * @Github：https://github.com/leavesCZY
  */
-internal object JsonHandler {
+internal object JsonFormat {
 
     private val gson by lazy(mode = LazyThreadSafetyMode.NONE) {
         GsonBuilder()

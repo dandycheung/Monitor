@@ -7,7 +7,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import github.leavesczy.monitor.R
 import github.leavesczy.monitor.internal.ContextProvider
-import github.leavesczy.monitor.internal.JsonHandler
+import github.leavesczy.monitor.internal.JsonFormat
 import org.w3c.dom.Document
 import org.xml.sax.InputSource
 import org.xml.sax.SAXParseException
@@ -277,7 +277,7 @@ private fun formatBody(body: String?, contentType: String): String {
         }
 
         contentType.contains("json", true) -> {
-            JsonHandler.toPrettyJson(json = body)
+            JsonFormat.toPrettyJson(json = body)
         }
 
         contentType.contains("xml", true) -> {

@@ -1,11 +1,10 @@
 package github.leavesczy.monitor.samples
 
-import androidx.annotation.Keep
+import com.google.gson.annotations.SerializedName
 
 /**
  * @Author: leavesCZY
  * @Desc:
  * @Github：https://github.com/leavesCZY
  */
-@Keep
-data class Data(val thing: String)
+data class Data(@SerializedName("random") val random: String)

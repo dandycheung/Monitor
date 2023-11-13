@@ -22,11 +22,11 @@ internal data class MonitorDetailOverviewPageViewState(
 @Stable
 internal data class MonitorDetailRequestPageViewState(
     val headers: List<MonitorPair>,
-    val bodyFormat: String
+    val formattedBody: String
 )
 
 @Stable
 internal data class MonitorDetailResponsePageViewState(
     val headers: List<MonitorPair>,
-    val bodyFormat: String
+    val formattedBody: String
 )

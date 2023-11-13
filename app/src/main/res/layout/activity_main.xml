@@ -12,8 +12,6 @@
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
         android:text="Network Request"
-        android:textAllCaps="false"
-        android:textSize="16sp"
         tools:ignore="HardcodedText" />
 
 </LinearLayout>

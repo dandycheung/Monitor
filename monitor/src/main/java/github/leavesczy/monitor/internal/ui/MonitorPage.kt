@@ -19,7 +19,6 @@ import androidx.compose.material.icons.filled.DeleteOutline
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -27,9 +26,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import github.leavesczy.monitor.R
 import github.leavesczy.monitor.internal.db.Monitor
 import github.leavesczy.monitor.internal.db.MonitorStatus
@@ -106,15 +107,21 @@ private fun MonitorItem(monitor: Monitor, onClick: (Monitor) -> Unit) {
             subtitleColor = R.color.monitor_http_status_unsuccessful_sub
         }
     }
-    val titleTextStyle = MaterialTheme.typography.titleMedium.copy(
+    val titleTextStyle = TextStyle(
+        fontSize = 18.sp,
+        lineHeight = 20.sp,
+        letterSpacing = 0.2.sp,
+        color = colorResource(id = titleColor),
         fontFamily = FontFamily.SansSerif,
-        fontWeight = FontWeight.Medium,
-        color = colorResource(id = titleColor)
+        fontWeight = FontWeight.Medium
     )
-    val subtitleTextStyle = MaterialTheme.typography.bodySmall.copy(
-        fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.Normal,
-        color = colorResource(id = subtitleColor)
+    val subtitleTextStyle = TextStyle(
+        fontSize = 16.sp,
+        lineHeight = 18.sp,
+        letterSpacing = 0.2.sp,
+        color = colorResource(id = subtitleColor),
+        fontFamily = FontFamily.SansSerif,
+        fontWeight = FontWeight.Normal
     )
     Column(
         modifier = Modifier
@@ -203,7 +210,8 @@ private fun MonitorTopBar(
         title = {
             Text(
                 modifier = Modifier,
-                text = stringResource(id = R.string.monitor_library_name)
+                fontSize = 21.sp,
+                text = stringResource(id = R.string.monitor_monitor)
             )
         },
         navigationIcon = {
@@ -223,7 +231,8 @@ private fun MonitorTopBar(
             IconButton(
                 content = {
                     Icon(
-                        modifier = Modifier.size(size = 26.dp),
+                        modifier = Modifier
+                            .size(size = 26.dp),
                         imageVector = Icons.Filled.DeleteOutline,
                         contentDescription = null
                     )

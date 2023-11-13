@@ -1,6 +1,9 @@
 package github.leavesczy.monitor.internal.ui
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -13,22 +16,33 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -51,7 +65,9 @@ internal fun MonitorDetailsPage(
     requestPageViewState: MonitorDetailRequestPageViewState,
     responsePageViewState: MonitorDetailResponsePageViewState,
     onClickBack: () -> Unit,
-    onClickShare: () -> Unit
+    copyText: () -> Unit,
+    shareAsText: () -> Unit,
+    shareAsFile: () -> Unit
 ) {
     Scaffold(
         modifier = Modifier
@@ -60,7 +76,9 @@ internal fun MonitorDetailsPage(
             MonitorDetailsTopBar(
                 title = mainPageViewState.title,
                 onClickBack = onClickBack,
-                onClickShare = onClickShare
+                copyText = copyText,
+                shareAsText = shareAsText,
+                shareAsFile = shareAsFile
             )
         }
     ) { innerPadding ->
@@ -103,14 +121,14 @@ internal fun MonitorDetailsPage(
                     1 -> {
                         MonitorDetailsPage(
                             headers = requestPageViewState.headers,
-                            bodyFormat = requestPageViewState.bodyFormat
+                            bodyFormat = requestPageViewState.formattedBody
                         )
                     }
 
                     2 -> {
                         MonitorDetailsPage(
                             headers = responsePageViewState.headers,
-                            bodyFormat = responsePageViewState.bodyFormat
+                            bodyFormat = responsePageViewState.formattedBody
                         )
                     }
                 }
@@ -123,14 +141,20 @@ internal fun MonitorDetailsPage(
 private fun MonitorDetailsTopBar(
     title: String,
     onClickBack: () -> Unit,
-    onClickShare: () -> Unit
+    copyText: () -> Unit,
+    shareAsText: () -> Unit,
+    shareAsFile: () -> Unit
 ) {
+    var menuExpanded by remember {
+        mutableStateOf(value = false)
+    }
     CenterAlignedTopAppBar(
         modifier = Modifier,
         title = {
             Text(
                 modifier = Modifier.fillMaxWidth(),
                 text = title,
+                fontSize = 19.sp,
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis
             )
@@ -152,15 +176,93 @@ private fun MonitorDetailsTopBar(
             IconButton(
                 content = {
                     Icon(
-                        modifier = Modifier.size(size = 26.dp),
+                        modifier = Modifier
+                            .size(size = 26.dp),
                         imageVector = Icons.Filled.Share,
                         contentDescription = null
                     )
                 },
-                onClick = onClickShare
+                onClick = {
+                    menuExpanded = true
+                }
             )
+            Box(
+                modifier = Modifier
+                    .padding(end = 10.dp)
+            ) {
+                TopBarDropdownMenu(
+                    expanded = menuExpanded,
+                    onDismissRequest = {
+                        menuExpanded = false
+                    },
+                    copyText = copyText,
+                    shareAsText = shareAsText,
+                    shareAsFile = shareAsFile
+                )
+            }
         }
     )
+}
+
+@Composable
+private fun TopBarDropdownMenu(
+    expanded: Boolean,
+    onDismissRequest: () -> Unit,
+    copyText: () -> Unit,
+    shareAsText: () -> Unit,
+    shareAsFile: () -> Unit
+) {
+    DropdownMenu(
+        modifier = Modifier
+            .background(color = MaterialTheme.colorScheme.background),
+        expanded = expanded,
+        onDismissRequest = onDismissRequest
+    ) {
+        val textStyle = TextStyle(
+            fontSize = 18.sp,
+            color = if (isSystemInDarkTheme()) {
+                Color.White
+            } else {
+                Color.Black
+            }
+        )
+        DropdownMenuItem(
+            text = {
+                Text(
+                    text = stringResource(id = R.string.monitor_copy),
+                    style = textStyle
+                )
+            },
+            onClick = {
+                onDismissRequest()
+                copyText()
+            }
+        )
+        DropdownMenuItem(
+            text = {
+                Text(
+                    text = stringResource(id = R.string.monitor_share_as_text),
+                    style = textStyle
+                )
+            },
+            onClick = {
+                onDismissRequest()
+                shareAsText()
+            }
+        )
+        DropdownMenuItem(
+            text = {
+                Text(
+                    text = stringResource(id = R.string.monitor_share_as_file),
+                    style = textStyle
+                )
+            },
+            onClick = {
+                onDismissRequest()
+                shareAsFile()
+            }
+        )
+    }
 }
 
 @Composable
@@ -175,7 +277,8 @@ private fun ScrollableTabRow(
         indicator = @Composable { tabPositions ->
             if (selectedTabIndex < tabPositions.size) {
                 TabRowDefaults.Indicator(
-                    modifier = Modifier.tabIndicatorOffset(tabPositions[selectedTabIndex])
+                    modifier = Modifier.tabIndicatorOffset(currentTabPosition = tabPositions[selectedTabIndex]),
+                    color = Color.White
                 )
             }
         },
@@ -254,17 +357,19 @@ private fun MonitorDetailsPage(
         }
         if (bodyFormat.isNotBlank()) {
             item(contentType = "bodyFormat") {
-                Text(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 30.dp),
-                    text = bodyFormat,
-                    fontSize = 16.sp,
-                    lineHeight = 21.sp,
-                    fontFamily = FontFamily.Default,
-                    fontWeight = FontWeight.Normal,
-                    color = colorResource(id = R.color.monitor_http_body)
-                )
+                SelectionContainer {
+                    Text(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 30.dp),
+                        text = bodyFormat,
+                        fontSize = 16.sp,
+                        lineHeight = 21.sp,
+                        fontFamily = FontFamily.Default,
+                        fontWeight = FontWeight.Normal,
+                        color = colorResource(id = R.color.monitor_http_body)
+                    )
+                }
             }
         }
     }
@@ -275,7 +380,7 @@ private fun MonitorPairItem(pair: MonitorPair) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 1.dp),
+            .padding(vertical = 1.4.dp),
         verticalAlignment = Alignment.Top
     ) {
         Text(
@@ -288,14 +393,19 @@ private fun MonitorPairItem(pair: MonitorPair) {
             fontSize = 16.sp,
             color = colorResource(id = R.color.monitor_http_status_successful)
         )
-        Text(
+        SelectionContainer(
             modifier = Modifier
-                .weight(weight = 5f),
-            text = pair.value,
-            fontFamily = FontFamily.Default,
-            fontWeight = FontWeight.Normal,
-            fontSize = 15.sp,
-            color = colorResource(id = R.color.monitor_http_status_successful)
-        )
+                .weight(weight = 5f)
+        ) {
+            Text(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                text = pair.value,
+                fontFamily = FontFamily.Default,
+                fontWeight = FontWeight.Normal,
+                fontSize = 15.sp,
+                color = colorResource(id = R.color.monitor_http_status_successful)
+            )
+        }
     }
 }

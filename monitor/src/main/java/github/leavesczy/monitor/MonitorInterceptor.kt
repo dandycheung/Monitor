@@ -1,5 +1,6 @@
 package github.leavesczy.monitor
 
+import github.leavesczy.monitor.internal.ContextProvider
 import github.leavesczy.monitor.internal.MonitorNotificationHandler
 import github.leavesczy.monitor.internal.db.Monitor
 import github.leavesczy.monitor.internal.db.MonitorDatabase
@@ -21,15 +22,18 @@ import java.io.EOFException
  */
 class MonitorInterceptor : Interceptor {
 
+    @Volatile
+    private var notificationHandleInitialized = false
+
     override fun intercept(chain: Interceptor.Chain): Response {
+        initNotificationHandlerIfNeed()
         val request = chain.request()
         var monitor = buildMonitor(request = request)
         monitor = insert(monitor = monitor)
         val response = try {
-            chain.proceed(request)
+            chain.proceed(request = request)
         } catch (throwable: Throwable) {
             update(monitor = monitor.copy(error = throwable.toString()))
-            MonitorNotificationHandler.show(monitor = monitor)
             throw throwable
         }
         monitor = processResponse(
@@ -37,8 +41,18 @@ class MonitorInterceptor : Interceptor {
             monitor = monitor
         )
         update(monitor = monitor)
-        MonitorNotificationHandler.show(monitor = monitor)
         return response
+    }
+
+    private fun initNotificationHandlerIfNeed() {
+        if (!notificationHandleInitialized) {
+            synchronized(this) {
+                if (!notificationHandleInitialized) {
+                    notificationHandleInitialized = true
+                    MonitorNotificationHandler.init(context = ContextProvider.context)
+                }
+            }
+        }
     }
 
     private fun buildMonitor(request: Request): Monitor {
@@ -196,9 +210,9 @@ internal fun Response.getNativeSource(): Buffer {
     source.request(Long.MAX_VALUE)
     var buffer = source.buffer
     if (headers.bodyGzipped()) {
-        GzipSource(buffer.clone()).use { gzippedResponseBody ->
+        GzipSource(source = buffer.clone()).use { responseBody ->
             buffer = Buffer()
-            buffer.writeAll(gzippedResponseBody)
+            buffer.writeAll(source = responseBody)
         }
     }
     return buffer
