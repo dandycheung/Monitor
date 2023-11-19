@@ -51,7 +51,7 @@ private val typography = Typography(
         fontSize = 16.sp,
         lineHeight = 18.sp,
         letterSpacing = 0.2.sp
-    ),
+    )
 )
 
 @Composable

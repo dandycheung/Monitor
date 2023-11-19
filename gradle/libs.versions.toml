@@ -1,20 +1,20 @@
 [versions]
-android-plugin = "8.1.3"
-kotlin-plugin = "1.9.0"
-ksp-plugin = "1.9.0-1.0.13"
+android-plugin = "8.1.4"
+kotlin-plugin = "1.9.20"
+ksp-plugin = "1.9.20-1.0.14"
 
 junit-junit = "4.13.2"
 
 androidx-junit = "1.1.5"
 androidx-espresso = "3.5.1"
 androidx-appcompat = "1.6.1"
-androidx-activity-compose = "1.8.0"
+androidx-activity-compose = "1.8.1"
 
 google-material = "1.10.0"
 google-gson = "2.10.1"
 
 compose-bom = "2023.10.01"
-compose-compiler = "1.5.2"
+compose-compiler = "1.5.4"
 
 room = "2.6.0"
 
@@ -22,8 +22,8 @@ okhttp = "4.12.0"
 
 retrofit = "2.9.0"
 
-monitor-remote = "1.4.3"
-monitor-publishing = "1.4.3"
+monitor-remote = "1.4.4"
+monitor-publishing = "1.4.4"
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "android-plugin" }

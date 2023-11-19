@@ -13,7 +13,7 @@ val okHttpClient = OkHttpClient.Builder()
 同时引入 debug 和 release 版本的依赖库
 
 - debug 依赖用于日常的开发阶段
-- release 依赖用于最终的上线阶段，此模式下的 MonitorInterceptor 不包含任何依赖，且也不会执行任何操作
+- release 依赖用于最终的上线阶段，此模式下的 MonitorInterceptor 不包含任何依赖，也不会执行任何操作
 
 ```kotlin
 dependencyResolutionManagement {
