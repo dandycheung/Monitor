@@ -1,8 +1,8 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
-    id(libs.plugins.maven.publish.get().pluginId)
-    id(libs.plugins.signing.get().pluginId)
+    id("maven-publish")
+    id("signing")
 }
 
 android {
@@ -28,7 +28,7 @@ android {
 }
 
 dependencies {
-    compileOnly(libs.okhttp)
+    compileOnly(libs.squareup.okHttp)
 }
 
 val signingKeyId = properties["signing.keyId"]?.toString()

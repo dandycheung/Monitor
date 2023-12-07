@@ -2,8 +2,8 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.google.ksp)
-    id(libs.plugins.maven.publish.get().pluginId)
-    id(libs.plugins.signing.get().pluginId)
+    id("maven-publish")
+    id("signing")
 }
 
 android {
@@ -28,7 +28,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
+        kotlinCompilerExtensionVersion = libs.versions.androidx.compose.compiler.get()
     }
     publishing {
         singleVariant("release") {
@@ -41,13 +41,13 @@ android {
 dependencies {
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.activity.compose)
+    implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.androidx.compose.material.icons)
+    implementation(libs.androidx.compose.material3)
+    implementation(libs.androidx.room.ktx)
+    ksp(libs.androidx.room.compiler)
     implementation(libs.google.gson)
-    compileOnly(libs.okhttp)
-    implementation(libs.room.ktx)
-    ksp(libs.room.compiler)
-    implementation(platform(libs.compose.bom))
-    implementation(libs.compose.material.icons)
-    implementation(libs.compose.material3)
+    compileOnly(libs.squareup.okHttp)
 }
 
 val signingKeyId = properties["signing.keyId"]?.toString()
