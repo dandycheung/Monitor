@@ -16,7 +16,6 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import java.util.concurrent.TimeUnit
 
 /**
  * @Author: leavesCZY
@@ -28,11 +27,6 @@ class MainActivity : AppCompatActivity() {
 
     private val okHttpClient by lazy(mode = LazyThreadSafetyMode.NONE) {
         OkHttpClient.Builder().apply {
-            callTimeout(30, TimeUnit.SECONDS)
-            connectTimeout(30, TimeUnit.SECONDS)
-            readTimeout(30, TimeUnit.SECONDS)
-            writeTimeout(30, TimeUnit.SECONDS)
-            retryOnConnectionFailure(true)
             addInterceptor(HttpLoggingInterceptor().apply {
                 level = HttpLoggingInterceptor.Level.BODY
             })
@@ -49,27 +43,18 @@ class MainActivity : AppCompatActivity() {
         retrofit.create(ApiService::class.java)
     }
 
-    private val requestNotificationPermissionLauncher = registerForActivityResult(
-        ActivityResultContracts.RequestPermission()
-    ) {
-        checkNotificationPermission()
-    }
+    private val requestNotificationPermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) {
+            checkNotificationPermission()
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        initView()
-        requestNotificationPermission()
-    }
-
-    private fun initView() {
         findViewById<View>(R.id.btnNetworkRequest).setOnClickListener {
             showToast("已发起请求，请查看消息通知栏")
             networkRequest()
         }
-    }
-
-    private fun requestNotificationPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             requestNotificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
         } else {

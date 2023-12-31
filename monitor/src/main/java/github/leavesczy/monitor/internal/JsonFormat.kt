@@ -45,7 +45,7 @@ internal object JsonFormat {
         return gson.fromJson(json, type) ?: emptyList()
     }
 
-    private class ParameterizedTypeImpl<T> constructor(val clazz: Class<T>) : ParameterizedType {
+    private class ParameterizedTypeImpl<T>(val clazz: Class<T>) : ParameterizedType {
 
         override fun getActualTypeArguments(): Array<Type> {
             return arrayOf(clazz)
