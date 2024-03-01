@@ -11,11 +11,10 @@ import github.leavesczy.monitor.internal.ContextProvider
  * @Author: leavesCZY
  * @Date: 2020/11/8 14:43
  * @Desc:
- * @Github：https://github.com/leavesCZY
  */
 @Database(
     entities = [Monitor::class],
-    version = 35
+    version = 36
 )
 @TypeConverters(MonitorTypeConverter::class)
 internal abstract class MonitorDatabase : RoomDatabase() {
@@ -24,7 +23,7 @@ internal abstract class MonitorDatabase : RoomDatabase() {
 
         private const val DB_NAME = "Monitor"
 
-        const val MonitorTableName = "MonitorHttp"
+        const val MONITOR_TABLE_NAME = "MonitorHttp"
 
         private var monitorDatabase: MonitorDatabase? = null
 

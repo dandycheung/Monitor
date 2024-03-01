@@ -1,4 +1,4 @@
-package github.leavesczy.monitor.internal.ui
+package github.leavesczy.monitor.internal.ui.logic
 
 import androidx.compose.runtime.Stable
 import github.leavesczy.monitor.internal.db.MonitorPair

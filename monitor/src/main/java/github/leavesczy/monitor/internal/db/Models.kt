@@ -31,7 +31,6 @@ import javax.xml.transform.stream.StreamResult
  * @Author: leavesCZY
  * @Date: 2020/11/8 14:43
  * @Desc:
- * @Github：https://github.com/leavesCZY
  */
 @Stable
 internal data class MonitorPair(val name: String, val value: String)
@@ -44,7 +43,7 @@ internal enum class MonitorStatus {
 }
 
 @Stable
-@Entity(tableName = MonitorDatabase.MonitorTableName)
+@Entity(tableName = MonitorDatabase.MONITOR_TABLE_NAME)
 internal data class Monitor(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")

@@ -16,9 +16,8 @@ import java.io.EOFException
 
 /**
  * @Author: leavesCZY
- * @Date: 2020/10/20 18:26
+ * @Date: 2024/3/1 22:07
  * @Desc:
- * @Github：https://github.com/leavesCZY
  */
 class MonitorInterceptor : Interceptor {
 
@@ -165,12 +164,12 @@ class MonitorInterceptor : Interceptor {
     }
 
     private fun insert(monitor: Monitor): Monitor {
-        val id = MonitorDatabase.instance.monitorDao.insert(monitor = monitor)
+        val id = MonitorDatabase.instance.monitorDao.insertMonitor(monitor = monitor)
         return monitor.copy(id = id)
     }
 
     private fun update(monitor: Monitor) {
-        MonitorDatabase.instance.monitorDao.update(monitor = monitor)
+        MonitorDatabase.instance.monitorDao.updateMonitor(monitor = monitor)
     }
 
 }

@@ -15,20 +15,17 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.DeleteOutline
-import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
@@ -37,18 +34,20 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.itemContentType
+import androidx.paging.compose.itemKey
 import github.leavesczy.monitor.R
 import github.leavesczy.monitor.internal.db.Monitor
-import github.leavesczy.monitor.internal.db.MonitorDatabase
 import github.leavesczy.monitor.internal.db.MonitorStatus
-import kotlinx.coroutines.launch
+import github.leavesczy.monitor.internal.ui.logic.MonitorViewModel
 
 /**
  * @Author: leavesCZY
  * @Date: 2020/11/8 15:58
  * @Desc:
- * @Github：https://github.com/leavesCZY
  */
 internal class MonitorActivity : AppCompatActivity() {
 
@@ -56,12 +55,13 @@ internal class MonitorActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             MonitorTheme {
-                val queryFlow = MonitorDatabase.instance.monitorDao.queryFlow(limit = 300)
-                val monitorList by queryFlow.collectAsState(initial = emptyList())
+                val monitorViewModel = viewModel<MonitorViewModel>()
+                val monitorLazyPagingItems =
+                    monitorViewModel.getMonitors().collectAsLazyPagingItems()
                 MonitorPage(
+                    monitorLazyPagingItems = monitorLazyPagingItems,
                     onClickBack = ::onClickBack,
-                    onClickClear = ::onClickClear,
-                    monitorList = monitorList,
+                    onClickClear = monitorViewModel::onClickClear,
                     onClickMonitorItem = ::onClickMonitorItem
                 )
             }
@@ -72,15 +72,9 @@ internal class MonitorActivity : AppCompatActivity() {
         finish()
     }
 
-    private fun onClickClear() {
-        lifecycleScope.launch {
-            MonitorDatabase.instance.monitorDao.deleteAll()
-        }
-    }
-
     private fun onClickMonitorItem(monitor: Monitor) {
         val intent = Intent(this, MonitorDetailsActivity::class.java)
-        intent.putExtra(MonitorDetailsActivity.keyMonitorId, monitor.id)
+        intent.putExtra(MonitorDetailsActivity.KEY_MONITOR_ID, monitor.id)
         startActivity(intent)
     }
 
@@ -88,9 +82,9 @@ internal class MonitorActivity : AppCompatActivity() {
 
 @Composable
 private fun MonitorPage(
+    monitorLazyPagingItems: LazyPagingItems<Monitor>,
     onClickBack: () -> Unit,
     onClickClear: () -> Unit,
-    monitorList: List<Monitor>,
     onClickMonitorItem: (Monitor) -> Unit
 ) {
     Scaffold(
@@ -111,15 +105,17 @@ private fun MonitorPage(
             contentPadding = PaddingValues(bottom = 60.dp)
         ) {
             items(
-                items = monitorList,
-                key = {
+                count = monitorLazyPagingItems.itemCount,
+                key = monitorLazyPagingItems.itemKey {
                     it.id
                 },
-                contentType = {
+                contentType = monitorLazyPagingItems.itemContentType {
                     "monitor"
                 }
-            ) {
-                MonitorItem(monitor = it, onClick = onClickMonitorItem)
+            ) { index ->
+                monitorLazyPagingItems[index]?.let {
+                    MonitorItem(monitor = it, onClick = onClickMonitorItem)
+                }
             }
         }
     }
@@ -238,7 +234,7 @@ private fun MonitorItem(monitor: Monitor, onClick: (Monitor) -> Unit) {
                 }
             }
         }
-        Divider(
+        HorizontalDivider(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 10.dp)
@@ -266,7 +262,7 @@ private fun MonitorTopBar(
                     Icon(
                         modifier = Modifier
                             .size(size = 26.dp),
-                        imageVector = Icons.Default.ArrowBack,
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = null
                     )
                 },

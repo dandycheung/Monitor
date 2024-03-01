@@ -10,7 +10,6 @@ import java.lang.reflect.Type
  * @Author: leavesCZY
  * @Date: 2020/11/8 15:34
  * @Desc:
- * @Github：https://github.com/leavesCZY
  */
 internal object JsonFormat {
 

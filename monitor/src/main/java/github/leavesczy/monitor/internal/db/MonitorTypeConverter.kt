@@ -7,7 +7,6 @@ import github.leavesczy.monitor.internal.JsonFormat
  * @Author: leavesCZY
  * @Date: 2020/11/8 14:43
  * @Desc:
- * @Github：https://github.com/leavesCZY
  */
 internal class MonitorTypeConverter {
 

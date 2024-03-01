@@ -27,7 +27,6 @@ import kotlinx.coroutines.launch
  * @Author: leavesCZY
  * @Date: 2020/11/8 14:44
  * @Desc:
- * @Github：https://github.com/leavesCZY
  */
 internal object MonitorNotificationHandler {
 
@@ -54,7 +53,7 @@ internal object MonitorNotificationHandler {
             context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         monitorObserver?.cancel()
         monitorObserver = GlobalScope.launch(context = Dispatchers.Default) {
-            val queryFlow = MonitorDatabase.instance.monitorDao.queryFlow(limit = 8)
+            val queryFlow = MonitorDatabase.instance.monitorDao.queryMonitors(limit = 6)
             queryFlow
                 .map {
                     it.map { monitor ->

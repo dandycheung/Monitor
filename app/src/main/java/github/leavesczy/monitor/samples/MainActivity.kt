@@ -19,9 +19,8 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 /**
  * @Author: leavesCZY
- * @Date: 2020/10/20 18:34
+ * @Date: 2024/3/1 23:24
  * @Desc:
- * @Github：https://github.com/leavesCZY
  */
 class MainActivity : AppCompatActivity() {
 
