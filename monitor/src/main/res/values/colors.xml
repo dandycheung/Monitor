@@ -4,11 +4,11 @@
     <color name="monitor_navigation_bar">#FFFFFFFF</color>
     <color name="monitor_top_bar_tab_text_selected">#FFFFFFFF</color>
     <color name="monitor_top_bar_tab_text_unselected">#CCFFFFFF</color>
-    <color name="monitor_http_status_requesting">#FF8996A2</color>
-    <color name="monitor_http_status_requesting_sub">#FF8996A2</color>
-    <color name="monitor_http_status_successful">#FF001018</color>
-    <color name="monitor_http_status_successful_sub">#FF001018</color>
-    <color name="monitor_http_status_unsuccessful">#FFFF545C</color>
-    <color name="monitor_http_status_unsuccessful_sub">#FF001018</color>
+    <color name="monitor_http_status_requesting_title">#FF687787</color>
+    <color name="monitor_http_status_requesting_subtitle">#FF687787</color>
+    <color name="monitor_http_status_successful_title">#FF001018</color>
+    <color name="monitor_http_status_successful_subtitle">#FF687787</color>
+    <color name="monitor_http_status_unsuccessful_title">#FFEB6847</color>
+    <color name="monitor_http_status_unsuccessful_subtitle">#FF687787</color>
     <color name="monitor_http_body">#FF001018</color>
 </resources>

@@ -213,7 +213,7 @@ private fun MonitorDetailsTopBar(
             Text(
                 modifier = Modifier.fillMaxWidth(),
                 text = title,
-                fontSize = 19.sp,
+                fontSize = 18.sp,
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis
             )
@@ -223,7 +223,7 @@ private fun MonitorDetailsTopBar(
                 content = {
                     Icon(
                         modifier = Modifier
-                            .size(size = 26.dp),
+                            .size(size = 24.dp),
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = null
                     )
@@ -236,7 +236,7 @@ private fun MonitorDetailsTopBar(
                 content = {
                     Icon(
                         modifier = Modifier
-                            .size(size = 26.dp),
+                            .size(size = 24.dp),
                         imageVector = Icons.Filled.Share,
                         contentDescription = null
                     )
@@ -355,7 +355,7 @@ private fun ScrollableTabRow(
                     }
                     .padding(vertical = 12.dp),
                 text = item,
-                fontSize = 16.sp,
+                fontSize = 15.sp,
                 textAlign = TextAlign.Center,
                 color = if (index == selectedTabIndex) {
                     colorResource(id = R.color.monitor_top_bar_tab_text_selected)
@@ -424,7 +424,7 @@ private fun MonitorDetailsPage(
                             .padding(top = 30.dp),
                         text = bodyFormat,
                         fontSize = 16.sp,
-                        lineHeight = 21.sp,
+                        lineHeight = 18.sp,
                         fontFamily = FontFamily.Default,
                         fontWeight = FontWeight.Normal,
                         color = colorResource(id = R.color.monitor_http_body)
@@ -440,18 +440,19 @@ private fun MonitorPairItem(pair: MonitorPair) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 1.4.dp),
+            .padding(vertical = 3.dp),
         verticalAlignment = Alignment.Top
     ) {
         Text(
             modifier = Modifier
-                .weight(weight = 3.2f)
+                .weight(weight = 3.5f)
                 .padding(end = 10.dp),
             text = pair.name,
             fontFamily = FontFamily.SansSerif,
             fontWeight = FontWeight.Medium,
             fontSize = 16.sp,
-            color = colorResource(id = R.color.monitor_http_status_successful)
+            lineHeight = 18.sp,
+            color = colorResource(id = R.color.monitor_http_status_successful_title)
         )
         SelectionContainer(
             modifier = Modifier
@@ -463,8 +464,9 @@ private fun MonitorPairItem(pair: MonitorPair) {
                 text = pair.value,
                 fontFamily = FontFamily.Default,
                 fontWeight = FontWeight.Normal,
-                fontSize = 15.sp,
-                color = colorResource(id = R.color.monitor_http_status_successful)
+                fontSize = 14.sp,
+                lineHeight = 16.sp,
+                color = colorResource(id = R.color.monitor_http_status_successful_subtitle)
             )
         }
     }

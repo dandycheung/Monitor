@@ -127,42 +127,37 @@ private fun MonitorItem(monitor: Monitor, onClick: (Monitor) -> Unit) {
     val subtitleColor: Int
     when (monitor.httpStatus) {
         MonitorStatus.Requesting -> {
-            titleColor = R.color.monitor_http_status_requesting
-            subtitleColor = R.color.monitor_http_status_requesting_sub
+            titleColor = R.color.monitor_http_status_requesting_title
+            subtitleColor = R.color.monitor_http_status_requesting_subtitle
         }
 
         MonitorStatus.Complete -> {
-            titleColor = if (monitor.responseCode == 200) {
-                R.color.monitor_http_status_successful
+            if (monitor.responseCode == 200) {
+                titleColor = R.color.monitor_http_status_successful_title
+                subtitleColor = R.color.monitor_http_status_successful_subtitle
             } else {
-                R.color.monitor_http_status_unsuccessful
-            }
-            subtitleColor = if (monitor.responseCode == 200) {
-                R.color.monitor_http_status_successful_sub
-            } else {
-                R.color.monitor_http_status_unsuccessful_sub
+                titleColor = R.color.monitor_http_status_unsuccessful_title
+                subtitleColor = R.color.monitor_http_status_unsuccessful_subtitle
             }
         }
 
         MonitorStatus.Failed -> {
-            titleColor = R.color.monitor_http_status_unsuccessful
-            subtitleColor = R.color.monitor_http_status_unsuccessful_sub
+            titleColor = R.color.monitor_http_status_unsuccessful_title
+            subtitleColor = R.color.monitor_http_status_unsuccessful_subtitle
         }
     }
     val titleTextStyle = TextStyle(
-        fontSize = 18.sp,
-        lineHeight = 20.sp,
-        letterSpacing = 0.2.sp,
+        fontSize = 17.sp,
+        lineHeight = 19.sp,
         color = colorResource(id = titleColor),
-        fontFamily = FontFamily.SansSerif,
+        fontFamily = FontFamily.Default,
         fontWeight = FontWeight.Medium
     )
     val subtitleTextStyle = TextStyle(
-        fontSize = 16.sp,
-        lineHeight = 18.sp,
-        letterSpacing = 0.2.sp,
+        fontSize = 14.sp,
+        lineHeight = 16.sp,
         color = colorResource(id = subtitleColor),
-        fontFamily = FontFamily.SansSerif,
+        fontFamily = FontFamily.Default,
         fontWeight = FontWeight.Normal
     )
     Column(
@@ -192,7 +187,8 @@ private fun MonitorItem(monitor: Monitor, onClick: (Monitor) -> Unit) {
                         .fillMaxWidth()
                 ) {
                     Text(
-                        modifier = Modifier.weight(weight = 1f),
+                        modifier = Modifier
+                            .weight(weight = 1f),
                         text = monitor.pathWithQuery,
                         style = titleTextStyle
                     )
@@ -204,11 +200,8 @@ private fun MonitorItem(monitor: Monitor, onClick: (Monitor) -> Unit) {
                 }
                 Text(
                     modifier = Modifier
-                        .padding(
-                            top = 3.dp,
-                            bottom = 3.dp
-                        ),
-                    text = String.format("%s://%s", monitor.scheme, monitor.host),
+                        .padding(vertical = 3.dp),
+                    text = monitor.host,
                     style = subtitleTextStyle
                 )
                 Row(
@@ -252,7 +245,7 @@ private fun MonitorTopBar(
         title = {
             Text(
                 modifier = Modifier,
-                fontSize = 21.sp,
+                fontSize = 20.sp,
                 text = stringResource(id = R.string.monitor_monitor)
             )
         },
@@ -261,7 +254,7 @@ private fun MonitorTopBar(
                 content = {
                     Icon(
                         modifier = Modifier
-                            .size(size = 26.dp),
+                            .size(size = 24.dp),
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = null
                     )
@@ -274,7 +267,7 @@ private fun MonitorTopBar(
                 content = {
                     Icon(
                         modifier = Modifier
-                            .size(size = 26.dp),
+                            .size(size = 24.dp),
                         imageVector = Icons.Filled.DeleteOutline,
                         contentDescription = null
                     )
