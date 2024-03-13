@@ -450,7 +450,7 @@ private fun MonitorPairItem(pair: MonitorPair) {
             text = pair.name,
             fontFamily = FontFamily.SansSerif,
             fontWeight = FontWeight.Medium,
-            fontSize = 16.sp,
+            fontSize = 15.sp,
             lineHeight = 18.sp,
             color = colorResource(id = R.color.monitor_http_status_successful_title)
         )

@@ -30,4 +30,4 @@ dependencies {
 }
 ```
 
-![](https://github.com/leavesCZY/Monitor/assets/30774063/f95347c1-20a7-4ec9-9f36-230a78fb4a3e)
+![](https://github.com/leavesCZY/Monitor/assets/30774063/9054fcf3-947b-46dc-a765-ce620993bd11)
