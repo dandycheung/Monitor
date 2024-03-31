@@ -68,7 +68,6 @@ dependencies {
     implementation(libs.squareup.retrofit)
     implementation(libs.squareup.retrofit.converter.gson)
     implementation(libs.squareup.okHttp.logging.interceptor)
-//    implementation(project(":monitor"))
 //    debugImplementation(libs.monitor)
 //    releaseImplementation(libs.monitor.no.op)
     debugImplementation(project(":monitor"))
