@@ -27,7 +27,7 @@ class AndroidPublishConventionPlugin : Plugin<Project> {
                     name.set("Monitor")
                     description.set("An Http inspector for OkHttp & Retrofit")
                     inceptionYear.set("2020")
-                    url.set("https://github.com/leavesCZY/Monitor")
+                    url.set("https://github.com/leavesczy/Monitor")
                     licenses {
                         license {
                             name.set("The Apache License, Version 2.0")
@@ -37,15 +37,15 @@ class AndroidPublishConventionPlugin : Plugin<Project> {
                     }
                     developers {
                         developer {
-                            id.set("leavesCZY")
-                            name.set("leavesCZY")
-                            url.set("https://github.com/leavesCZY")
+                            id.set("leavesczy")
+                            name.set("leavesczy")
+                            url.set("https://github.com/leavesczy")
                         }
                     }
                     scm {
-                        url.set("https://github.com/leavesCZY/Monitor")
-                        connection.set("scm:git:git://github.com/leavesCZY/Monitor.git")
-                        developerConnection.set("scm:git:ssh://git@github.com/leavesCZY/Monitor.git")
+                        url.set("https://github.com/leavesczy/Monitor")
+                        connection.set("scm:git:git://github.com/leavesczy/Monitor.git")
+                        developerConnection.set("scm:git:ssh://git@github.com/leavesczy/Monitor.git")
                     }
                 }
             }

@@ -26,7 +26,7 @@ internal fun Project.configureAndroidApplication(applicationExtension: Applicati
         signingConfigs {
             create("release") {
                 storeFile = File(File(rootDir, "doc"), "key.jks")
-                keyAlias = "leavesCZY"
+                keyAlias = "leavesczy"
                 keyPassword = "123456"
                 storePassword = "123456"
                 enableV2Signing = true

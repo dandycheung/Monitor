@@ -5,7 +5,7 @@ android-compile-sdk = "37"
 android-build-tools = "37.0.0"
 
 android-plugin = "9.4.1"
-kotlin-plugin = "2.4.20"
+kotlin-plugin = "2.4.21"
 google-ksp-plugin = "2.3.12"
 maven-publish-plugin = "0.37.0"
 
@@ -14,11 +14,11 @@ androidx-espresso = "3.7.0"
 androidx-activity = "1.13.0"
 androidx-room = "3.0.3"
 androidx-compose-bom = "2026.09.00"
-androidx-compose-paging = "3.5.1"
+androidx-compose-paging = "3.5.3"
 
 junit = "4.13.2"
-google-gson = "2.14.0"
-squareup-okHttp = "5.5.0"
+google-gson = "2.15.0"
+squareup-okHttp = "5.5.1"
 squareup-retrofit = "3.0.0"
 
 leavesczy-monitor = "1.9.0"
